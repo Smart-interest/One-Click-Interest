@@ -3,341 +3,697 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>एडवांस डिजिटल ब्याज कैलकुलेटर</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>प्रीमियम फाइनेंशियल कैलकुलेटर | Advance Financial Calculator (All-in-One)</title>
+    <meta name="description" content="एक ही जगह पर पाएँ साधारण ब्याज, चक्रवृद्धि ब्याज, होम/कार लोन EMI कैलकुलेटर और लोन तुलना की सुविधा। आकर्षक ग्राफ़ और रिपोर्ट डाउनलोड के साथ।">
+    <meta name="keywords" content="ब्याज कैलकुलेटर, EMI Calculator, Simple Interest, Compound Interest, Loan Comparison, Financial Calculator Hindi">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #198754;
-            --dark-color: #212529;
-            --light-bg: #f8f9fa;
+            --bg-gradient: linear-gradient(135deg, #e0a800 0%, #0d6efd 100%);
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --text-color: #212529;
+            --text-muted: #555;
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --tab-active-bg: #0d6efd;
+            --tab-active-color: #fff;
         }
+
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --glass-bg: rgba(30, 41, 59, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --text-color: #f8fafc;
+            --text-muted: #cbd5e1;
+            --input-bg: #334155;
+            --tab-active-bg: #38bdf8;
+            --tab-active-color: #0f172a;
+        }
+
         body {
-            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             min-height: 100vh;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            padding: 30px 15px;
+        }
+
+        /* Glassmorphism Wrapper */
+        .main-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            max-width: 950px;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .theme-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            cursor: pointer;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .calc-wrapper {
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            overflow: hidden;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid rgba(255,255,255,0.8);
-        }
-        .calc-header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 25px 20px;
+
+        .header-section {
             text-align: center;
+            padding: 30px 20px 15px;
+            border-bottom: 1px solid var(--glass-border);
         }
-        .calc-header h2 {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0;
-            letter-spacing: 0.5px;
+
+        .nav-pills .nav-link {
+            color: var(--text-color);
+            background: rgba(255,255,255,0.1);
+            margin: 5px;
+            border-radius: 12px;
+            font-weight: 500;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
         }
-        .calc-header p {
-            font-size: 13px;
-            margin: 5px 0 0 0;
-            opacity: 0.8;
+
+        .nav-pills .nav-link.active {
+            background-color: var(--tab-active-bg);
+            color: var(--tab-active-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .calc-body {
-            padding: 25px 20px;
+
+        .calc-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--glass-border);
+            height: 100%;
         }
-        .form-label {
-            font-weight: 600;
-            color: var(--dark-color);
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-        .input-group-text {
-            background-color: #e9ecef;
-            color: #495057;
-            font-weight: 600;
-        }
+
         .form-control, .form-select {
-            padding: 12px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
             border-radius: 10px;
-            border: 1.5px solid #dee2e6;
-            font-size: 16px;
+            padding: 10px 12px;
         }
+
         .form-control:focus, .form-select:focus {
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
-            border-color: var(--primary-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
         }
-        .btn-calc {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
             border: none;
             color: white;
-            padding: 14px;
-            font-size: 18px;
-            font-weight: 700;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.3);
-        }
-        .btn-calc:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(56, 239, 125, 0.4);
-            color: white;
-        }
-        .result-card {
-            background: #f8f9fa;
-            border-radius: 16px;
-            border: 1px solid #e9ecef;
-            display: none;
-            animation: fadeIn 0.5s ease-in-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .res-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px dashed #dee2e6;
-        }
-        .res-item:last-child {
-            border-bottom: none;
-        }
-        .res-label {
-            color: #6c757d;
-            font-size: 15px;
-        }
-        .res-val {
-            font-weight: 700;
-            color: var(--dark-color);
-            font-size: 16px;
-        }
-        .res-total-box {
-            background: #e8f5e9;
-            border-radius: 12px;
-            padding: 15px;
-            border-left: 5px solid #2e7d32;
-        }
-        .footer-credit {
-            text-align: center;
-            padding: 15px;
-            background: #f1f3f5;
-            font-size: 13px;
-            color: #6c757d;
-            border-top: 1px solid #e9ecef;
-        }
-        .footer-credit a {
-            color: #1e3c72;
-            text-decoration: none;
+            padding: 12px;
             font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s;
         }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+        }
+
+        .result-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px dashed var(--glass-border);
+        }
+
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 250px;
+            width: 250px;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            font-size: 13px;
+            padding: 8px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
         @media print {
-            body { background: white; }
-            .calc-wrapper { box-shadow: none; max-width: 100%; }
-            .btn, .footer-credit, .calc-header p { display: none !important; }
-            .result-card { display: block !important; }
+            body { background: white; color: black; }
+            .main-container { box-shadow: none; border: none; }
+            .btn, .theme-toggle-btn, .nav-pills, .history-box { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-<div class="calc-wrapper">
-    <!-- Header -->
-    <div class="calc-header">
-        <h2><i class="fa-solid fa-calculator me-2"></i>स्मार्ट ब्याज कैलकुलेटर</h2>
-        <p>गाँव का देसी ब्याज और बैंक का ब्याज मिनटों में निकालें</p>
+<button class="theme-toggle-btn" onclick="toggleTheme()" title="डार्क/लाइट मोड बदलें">
+    <i id="theme-icon" class="fa-solid fa-moon"></i>
+</button>
+
+<div class="container main-container p-0 position-relative">
+    
+    <div class="header-section">
+        <h2 class="fw-bold"><i class="fa-solid fa-wallet text-warning me-2"></i>प्रीमियम फाइनेंशियल कैलकुलेटर</h2>
+        <p class="text-muted mb-3">ब्याज, EMI और लोन तुलना का ऑल-इन-वन आधुनिक समाधान</p>
+        
+        <ul class="nav nav-pills justify-content-center" id="calcTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="si-tab" data-bs-toggle="pill" data-bs-target="#si-panel" type="button"><i class="fa-solid fa-percentage me-1"></i>Simple Interest</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="ci-tab" data-bs-toggle="pill" data-bs-target="#ci-panel" type="button"><i class="fa-solid fa-chart-line me-1"></i>Compound Interest</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="emi-tab" data-bs-toggle="pill" data-bs-target="#emi-panel" type="button"><i class="fa-solid fa-house me-1"></i>EMI Calculator</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="compare-tab" data-bs-toggle="pill" data-bs-target="#compare-panel" type="button"><i class="fa-solid fa-code-compare me-1"></i>Loan Comparison</button>
+            </li>
+        </ul>
     </div>
 
-    <!-- Body -->
-    <div class="calc-body">
-        <!-- Principal -->
-        <div class="mb-3">
-            <label class="form-label">मूलधन (Principal Amount)</label>
-            <div class="input-group">
-                <span class="input-group-text">₹</span>
-                <input type="number" id="principal" class="form-control" placeholder="रकम दर्ज करें (जैसे: 50000)" autocomplete="off">
-            </div>
-        </div>
-
-        <!-- Rate & Type -->
-        <div class="row text-start">
-            <div class="col-md-6 mb-3">
-                <label class="form-label">ब्याज दर (Rate of Interest)</label>
-                <div class="input-group">
-                    <input type="number" id="rate" step="0.01" class="form-control" placeholder="दर लिखें (जैसे: 2)">
-                    <span class="input-group-text">%</span>
+    <div class="p-4" id="printableReport">
+        <div class="tab-content" id="calcTabsContent">
+            
+            <div class="tab-pane fade show active" id="si-panel" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="calc-card">
+                            <h4 class="mb-3 fw-bold text-primary">साधारण ब्याज (SI)</h4>
+                            <div class="mb-3">
+                                <label class="form-label">मूलधन (Principal Amount)</label>
+                                <input type="number" id="si-principal" class="form-control" placeholder="₹ राशि लिखें" value="50000">
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">दर (Rate %)</label>
+                                    <input type="number" id="si-rate" step="0.01" class="form-control" value="2">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">दर प्रकार</label>
+                                    <select id="si-rateType" class="form-select">
+                                        <option value="monthly">मासिक (गाँव का)</option>
+                                        <option value="yearly" selected>सालाना (बैंक का)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">शुरुआत तारीख</label>
+                                    <input type="date" id="si-start" class="form-control">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">अंतिम तारीख</label>
+                                    <input type="date" id="si-end" class="form-control">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary-custom w-100" onclick="calcSimpleInterest()"><i class="fa-solid fa-calculator me-2"></i>कैलकुलेट करें</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="calc-card d-flex flex-column justify-content-between">
+                            <div>
+                                <h4 class="mb-3 fw-bold text-success">विवरण / Report</h4>
+                                <div class="result-box" id="si-result">
+                                    <p class="mb-1">समय अवधि: <b id="si-res-time">-</b></p>
+                                    <p class="mb-1">मूलधन: <b>₹<span id="si-res-p">0</span></b></p>
+                                    <p class="mb-1">ब्याज राशि: <b class="text-danger">₹<span id="si-res-i">0</span></b></p>
+                                    <hr>
+                                    <h5>कुल धन: <b class="text-success">₹<span id="si-res-total">0</span></b></h5>
+                                </div>
+                            </div>
+                            <div class="chart-container my-3">
+                                <canvas id="siChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">ब्याज का प्रकार (Type)</label>
-                <select id="rateType" class="form-select">
-                    <option value="monthly" selected>मासिक (गाँव का तरीका - ₹ सैकड़ा)</option>
-                    <option value="yearly">सालाना (बैंक का तरीका)</option>
-                </select>
-            </div>
-        </div>
 
-        <!-- Dates -->
-        <div class="row text-start">
-            <div class="col-6 mb-4">
-                <label class="form-label">शुरुआत की तारीख</label>
-                <input type="date" id="startDate" class="form-control">
-            </div>
-            <div class="col-6 mb-4">
-                <label class="form-label">आज/अंत की तारीख</label>
-                <input type="date" id="endDate" class="form-control">
-            </div>
-        </div>
-
-        <!-- Calculate Button -->
-        <button class="btn btn-calc w-100 mb-4" onclick="calculateAdvancedInterest()">
-            <i class="fa-solid fa-gears me-2"></i>हिसाब कैलकुलेट करें
-        </button>
-
-        <!-- Results Box -->
-        <div class="result-card p-4" id="resultCard">
-            <h4 class="text-center mb-3 text-secondary style-font" style="font-size: 18px; font-weight: 600;">
-                <i class="fa-solid fa-receipt me-2"></i>पूरा विवरण (Report)
-            </h4>
-            
-            <div class="res-item">
-                <span class="res-label">मूलधन राशि:</span>
-                <span class="res-val">₹<span id="lblPrincipal">0</span></span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">ब्याज दर:</span>
-                <span class="res-val"><span id="lblRate">0</span>% (<span id="lblType">मासिक</span>)</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">कुल समय अवधि:</span>
-                <span class="res-val text-primary" id="lblTime">0 दिन</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">केवल ब्याज राशि:</span>
-                <span class="res-val text-danger" style="font-size: 18px;">₹<span id="lblInterest">0</span></span>
-            </div>
-            
-            <div class="res-total-box mt-3 d-flex justify-content-between align-items-center">
-                <span class="fw-bold text-success" style="font-size: 16px;">कुल धन (मूलधन + ब्याज):</span>
-                <span class="fw-bold text-success" style="font-size: 20px;">₹<span id="lblTotal">0</span></span>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="row g-2 mt-3">
-                <div class="col-6">
-                    <button class="btn btn-success btn-sm w-100 p-2 text-white" style="border-radius: 8px;" onclick="shareOnWhatsApp()">
-                        <i class="fa-brands fa-whatsapp me-1"></i>WhatsApp शेयर
-                    </button>
+            <div class="tab-pane fade" id="ci-panel" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="calc-card">
+                            <h4 class="mb-3 fw-bold text-primary">चक्रवृद्धि ब्याज (CI)</h4>
+                            <div class="mb-3">
+                                <label class="form-label">मूलधन (Principal)</label>
+                                <input type="number" id="ci-principal" class="form-control" value="50000">
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">वार्षिक दर (%)</label>
+                                    <input type="number" id="ci-rate" class="form-control" value="8">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">समय (वर्ष)</label>
+                                    <input type="number" id="ci-time" class="form-control" value="3">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">ब्याज चक्र (Compounding Frequency)</label>
+                                <select id="ci-freq" class="form-select">
+                                    <option value="12" selected>वार्षिक (Yearly)</option>
+                                    <option value="6">अर्धवार्षिक (Half-Yearly)</option>
+                                    <option value="3">त्रैमासिक (Quarterly)</option>
+                                    <option value="1">मासिक (Monthly)</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary-custom w-100" onclick="calcCompoundInterest()"><i class="fa-solid fa-calculator me-2"></i>कैलकुलेट करें</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="calc-card d-flex flex-column justify-content-between">
+                            <div>
+                                <h4 class="mb-3 fw-bold text-success">विवरण / Report</h4>
+                                <div class="result-box" id="ci-result">
+                                    <p class="mb-1">मूलधन राशि: <b>₹<span id="ci-res-p">0</span></b></p>
+                                    <p class="mb-1">चक्रवृद्धि ब्याज: <b class="text-danger">₹<span id="ci-res-i">0</span></b></p>
+                                    <hr>
+                                    <h5>कुल मिश्रधन: <b class="text-success">₹<span id="ci-res-total">0</span></b></h5>
+                                </div>
+                            </div>
+                            <div class="chart-container my-3">
+                                <canvas id="ciChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-6">
-                    <button class="btn btn-outline-secondary btn-sm w-100 p-2" style="border-radius: 8px;" onclick="window.print()">
-                        <i class="fa-solid fa-print me-1"></i>प्रिंट हिसाब
-                    </button>
+            </div>
+
+            <div class="tab-pane fade" id="emi-panel" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="calc-card">
+                            <h4 class="mb-3 fw-bold text-primary">होम/कार लोन EMI कैलकुलेटर</h4>
+                            <div class="mb-3">
+                                <label class="form-label">लोन राशि (Loan Amount)</label>
+                                <input type="number" id="emi-amount" class="form-control" value="500000">
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">ब्याज दर (Annual Rate %)</label>
+                                    <input type="number" id="emi-rate" step="0.1" class="form-control" value="9.5">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">अवधि (Tenure)</label>
+                                    <div class="input-group">
+                                        <input type="number" id="emi-tenure" class="form-control" value="5">
+                                        <select id="emi-tenureType" class="form-select" style="max-width: 90px;">
+                                            <option value="years" selected>वर्ष</option>
+                                            <option value="months">महीने</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary-custom w-100" onclick="calcEMI()"><i class="fa-solid fa-calculator me-2"></i>EMI निकालें</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="calc-card d-flex flex-column justify-content-between">
+                            <div>
+                                <h4 class="mb-3 fw-bold text-success">विवरण / Report</h4>
+                                <div class="result-box" id="emi-result">
+                                    <h5 class="text-primary">मासिक EMI: <b>₹<span id="emi-res-val">0</span></b></h5>
+                                    <p class="mb-1">मूल लोन राशि: <b>₹<span id="emi-res-p">0</span></b></p>
+                                    <p class="mb-1">कुल देय ब्याज: <b class="text-danger">₹<span id="emi-res-i">0</span></b></p>
+                                    <hr>
+                                    <h5>कुल भुगतान राशि: <b class="text-success">₹<span id="emi-res-total">0</span></b></h5>
+                                </div>
+                            </div>
+                            <div class="chart-container my-3">
+                                <canvas id="emiChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="compare-panel" role="tabpanel">
+                <div class="calc-card">
+                    <h4 class="mb-4 fw-bold text-primary">दो अलग-अलग लोनों की तुलना (Loan Comparison)</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle text-center" style="color: inherit;">
+                            <thead>
+                                <tr class="table-secondary">
+                                    <th>पैरामीटर</th>
+                                    <th>लोन विकल्प 1 (Loan A)</th>
+                                    <th>लोन विकल्प 2 (Loan B)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><b>लोन राशि (Principal)</b></td>
+                                    <td><input type="number" id="comp-p1" class="form-control text-center" value="500000"></td>
+                                    <td><input type="number" id="comp-p2" class="form-control text-center" value="500000"></td>
+                                </tr>
+                                <tr>
+                                    <td><b>ब्याज दर (Annual Rate %)</b></td>
+                                    <td><input type="number" id="comp-r1" step="0.1" class="form-control text-center" value="8.5"></td>
+                                    <td><input type="number" id="comp-r2" step="0.1" class="form-control text-center" value="9.5"></td>
+                                </tr>
+                                <tr>
+                                    <td><b>अवधि (वर्षों में)</b></td>
+                                    <td><input type="number" id="comp-t1" class="form-control text-center" value="5"></td>
+                                    <td><input type="number" id="comp-t2" class="form-control text-center" value="5"></td>
+                                </tr>
+                                <tr class="table-light text-dark">
+                                    <td><b>मासिक EMI</b></td>
+                                    <td><span id="comp-emi1" class="fw-bold text-primary">₹0</span></td>
+                                    <td><span id="comp-emi2" class="fw-bold text-primary">₹0</span></td>
+                                </tr>
+                                <tr class="table-light text-dark">
+                                    <td><b>कुल ब्याज</b></td>
+                                    <td><span id="comp-i1" class="fw-bold text-danger">₹0</span></td>
+                                    <td><span id="comp-i2" class="fw-bold text-danger">₹0</span></td>
+                                </tr>
+                                <tr class="table-light text-dark">
+                                    <td><b>कुल भुगतान राशि</b></td>
+                                    <td><span id="comp-total1" class="fw-bold text-success">₹0</span></td>
+                                    <td><span id="comp-total2" class="fw-bold text-success">₹0</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-primary-custom w-100 mt-2" onclick="compareLoans()"><i class="fa-solid fa-code-compare me-2"></i>दोनों की तुलना करें</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row g-2 mt-4 btn-row">
+            <div class="col-md-4">
+                <button class="btn btn-success w-100 p-2 text-white fw-semibold" onclick="shareReportWhatsApp()">
+                    <i class="fa-brands fa-whatsapp me-2"></i>WhatsApp पर शेयर करें
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-danger w-100 p-2 text-white fw-semibold" onclick="downloadReportPDF()">
+                    <i class="fa-solid fa-file-pdf me-2"></i>PDF डाउनलोड करें
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-outline-secondary w-100 p-2 fw-semibold" onclick="window.print()">
+                    <i class="fa-solid fa-print me-2"></i>प्रिंट रिपोर्ट
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-4 history-box">
+            <div class="calc-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="fw-bold text-secondary mb-0"><i class="fa-solid fa-clock-rotate-left me-2"></i>हालिया हिसाब (History Save)</h5>
+                    <button class="btn btn-sm btn-outline-danger border-0" onclick="clearHistory()">इतिहास मिटाएं</button>
+                </div>
+                <div class="history-list" id="historyContainer">
+                    <p class="text-muted small text-center my-2">कोई पिछला इतिहास उपलब्ध नहीं है।</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer-credit">
-        Designed & Hosted by <a href="https://e-gyansetu.com" target="_blank">E-Gyan Setu</a>
+    <div class="bg-dark text-white-50 text-center py-3 fs-7" style="border-top: 1px solid var(--glass-border);">
+        Designed & Hosted by <a href="https://e-gyansetu.com" target="_blank" class="text-warning text-decoration-none fw-bold">E-Gyan Setu</a>
     </div>
 </div>
 
-<!-- JavaScript Logic -->
 <script>
-    // डिफ़ॉल्ट रूप से आज की तारीख सेट करें
-    document.getElementById('endDate').valueAsDate = new Date();
+    // वैश्विक वेरिएबल चार्ट्स को स्टोर करने के लिए
+    let currentChart = null;
 
-    function calculateAdvancedInterest() {
-        const principal = parseFloat(document.getElementById('principal').value);
-        const rate = parseFloat(document.getElementById('rate').value);
-        const startDateVal = document.getElementById('startDate').value;
-        const endDateVal = document.getElementById('endDate').value;
-        const rateType = document.getElementById('rateType').value;
+    // तारीख डिफ़ॉल्ट सेट करने के लिए आज की तारीख
+    document.getElementById('si-start').valueAsDate = new Date(new Date().setMonth(new Date().getMonth() - 12));
+    document.getElementById('si-end').valueAsDate = new Date();
 
-        if (isNaN(principal) || isNaN(rate) || !startDateVal || !endDateVal) {
-            alert("कृपया सभी फील्ड्स में सही जानकारी भरें!");
+    // ---------------- THEME TOGGLE (DARK MODE) ----------------
+    function toggleTheme() {
+        const body = document.body;
+        const icon = document.getElementById('theme-icon');
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            icon.className = 'fa-solid fa-moon';
+            localStorage.setItem('theme', 'light');
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            icon.className = 'fa-solid fa-sun';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+    // थीम रीस्टोर लोड होने पर
+    if(localStorage.getItem('theme') === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+    }
+
+    // ---------------- CHART REUSABILITY FUNCTION ----------------
+    function renderPieChart(canvasId, label1, val1, label2, val2) {
+        if (currentChart) { currentChart.destroy(); }
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        
+        // डार्क/लाइट मोड के अनुसार टेक्स्ट कलर तय करना
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        const textColor = isDark ? '#f8fafc' : '#212529';
+
+        currentChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [label1, label2],
+                datasets: [{
+                    data: [val1, val2],
+                    backgroundColor: ['#0d6efd', '#dc3545'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: textColor } }
+                }
+            }
+        });
+    }
+
+    // ---------------- HISTORY LOCAL STORAGE LOGIC ----------------
+    function saveToHistory(type, description) {
+        let history = JSON.parse(localStorage.getItem('fin_calc_history')) || [];
+        const timeStamp = new Date().toLocaleString('hi-IN');
+        history.unshift({ type, description, timeStamp });
+        if(history.length > 10) history.pop(); // Max 10 items
+        localStorage.setItem('fin_calc_history', JSON.stringify(history));
+        loadHistory();
+    }
+
+    function loadHistory() {
+        let history = JSON.parse(localStorage.getItem('fin_calc_history')) || [];
+        const container = document.getElementById('historyContainer');
+        if(history.length === 0) {
+            container.innerHTML = `<p class="text-muted small text-center my-2">कोई पिछला इतिहास उपलब्ध नहीं है।</p>`;
             return;
         }
+        container.innerHTML = history.map(item => `
+            <div class="history-item">
+                <span class="badge bg-secondary me-1">${item.type}</span> 
+                <span>${item.description}</span>
+                <span class="text-muted float-end fs-8" style="font-size:11px;">${item.timeStamp}</span>
+            </div>
+        `).join('');
+    }
 
-        const start = new Date(startDateVal);
-        const end = new Date(endDateVal);
+    function clearHistory() {
+        localStorage.removeItem('fin_calc_history');
+        loadHistory();
+    }
 
-        if (end < start) {
-            alert("अंत की तारीख, शुरुआत की तारीख से पहले की नहीं हो सकती!");
-            return;
+    // ---------------- 1. CALCULATE SIMPLE INTEREST ----------------
+    function calcSimpleInterest() {
+        const principal = parseFloat(document.getElementById('si-principal').value);
+        const rate = parseFloat(document.getElementById('si-rate').value);
+        const startVal = document.getElementById('si-start').value;
+        const endVal = document.getElementById('si-end').value;
+        const rateType = document.getElementById('si-rateType').value;
+
+        if (isNaN(principal) || isNaN(rate) || !startVal || !endVal) {
+            alert("कृपया सभी फील्ड्स भरें"); return;
         }
 
-        // दिनों का अंतर
+        const start = new Date(startVal);
+        const end = new Date(endVal);
         const diffTime = Math.abs(end - start);
         const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // सटीक वर्ष, महीने और दिन की गणना (गाँव के व्यावहारिक तरीके से)
-        let years = Math.floor(totalDays / 365);
-        let remainingDays = totalDays % 365;
-        let months = Math.floor(remainingDays / 30);
-        let days = remainingDays % 30;
-
-        let timeText = "";
-        if (years > 0) timeText += `${years} वर्ष `;
-        if (months > 0) timeText += `${months} माह `;
-        if (days > 0) timeText += `${days} दिन`;
-        if (totalDays === 0) timeText = "0 दिन";
-
-        // ब्याज की गणना
         let interest = 0;
+        let timeText = `${totalDays} दिन`;
+
         if (rateType === "monthly") {
-            // गाँव का तरीका: दर प्रति माह है
             const totalMonths = totalDays / 30;
             interest = (principal * rate * totalMonths) / 100;
+            timeText = `${(totalMonths).toFixed(1)} माह (${totalDays} दिन)`;
         } else {
-            // बैंक का तरीका: दर प्रति वर्ष है
             const totalYears = totalDays / 365;
             interest = (principal * rate * totalYears) / 100;
+            timeText = `${(totalYears).toFixed(1)} वर्ष (${totalDays} दिन)`;
         }
 
-        const totalAmount = principal + interest;
+        const total = principal + interest;
 
-        // स्क्रीन पर डेटा अपडेट करना
-        document.getElementById('lblPrincipal').innerText = principal.toLocaleString('en-IN');
-        document.getElementById('lblRate').innerText = rate;
-        document.getElementById('lblType').innerText = (rateType === "monthly") ? "मासिक" : "सालाना";
-        document.getElementById('lblTime').innerText = `${timeText} (कुल ${totalDays} दिन)`;
-        document.getElementById('lblInterest').innerText = interest.toFixed(2);
-        document.getElementById('lblTotal').innerText = totalAmount.toFixed(2);
+        document.getElementById('si-res-time').innerText = timeText;
+        document.getElementById('si-res-p').innerText = principal.toLocaleString('en-IN');
+        document.getElementById('si-res-i').innerText = interest.toFixed(2);
+        document.getElementById('si-res-total').innerText = total.toFixed(2);
 
-        // रिजल्ट बॉक्स को स्मूथली दिखाना
-        document.getElementById('resultCard').style.display = "block";
+        renderPieChart('siChart', 'मूलधन (Principal)', principal, 'ब्याज राशि (Interest)', interest);
+        saveToHistory('SI', `मूलधन: ₹${principal}, ब्याज: ₹${interest.toFixed(0)}, कुल: ₹${total.toFixed(0)}`);
     }
 
-    function shareOnWhatsApp() {
-        const p = document.getElementById('lblPrincipal').innerText;
-        const r = document.getElementById('lblRate').innerText;
-        const type = document.getElementById('lblType').innerText;
-        const time = document.getElementById('lblTime').innerText;
-        const interest = document.getElementById('lblInterest').innerText;
-        const total = document.getElementById('lblTotal').innerText;
+    // ---------------- 2. CALCULATE COMPOUND INTEREST ----------------
+    function calcCompoundInterest() {
+        const principal = parseFloat(document.getElementById('ci-principal').value);
+        const rate = parseFloat(document.getElementById('ci-rate').value) / 100;
+        const years = parseFloat(document.getElementById('ci-time').value);
+        const n = parseInt(document.getElementById('ci-freq').value);
 
-        const textMessage = `*📊 डिजिटल ब्याज रिपोर्ट *%0A%0A` +
-                            `• *मूलधन:* ₹${p}%0A` +
-                            `• *ब्याज दर:* ${r}% (${type})%0A` +
-                            `• *समय अवधि:* ${time}%0A` +
-                            `• *कुल ब्याज:* ₹${interest}%0A` +
-                            `-------------------------%0A` +
-                            `• *कुल देय राशि:* ₹${total}%0A%0A` +
-                            `👉 _E-Gyan Setu डिजिटल कैलकुलेटर द्वारा बनाया गया हिसाब।_`;
+        if (isNaN(principal) || isNaN(rate) || isNaN(years)) {
+            alert("कृपया सही वैल्यू दर्ज करें"); return;
+        }
 
+        // $A = P \times (1 + r/n)^{n \times t}$
+        const total = principal * Math.pow((1 + (rate / (12/n))), ((12/n) * years));
+        const interest = total - principal;
+
+        document.getElementById('ci-res-p').innerText = principal.toLocaleString('en-IN');
+        document.getElementById('ci-res-i').innerText = interest.toFixed(2);
+        document.getElementById('ci-res-total').innerText = total.toFixed(2);
+
+        renderPieChart('ciChart', 'मूलधन (Principal)', principal, 'चक्रवृद्धि ब्याज (CI)', interest);
+        saveToHistory('CI', `मूलधन: ₹${principal}, ब्याज: ₹${interest.toFixed(0)}, कुल: ₹${total.toFixed(0)}`);
+    }
+
+    // ---------------- 3. CALCULATE EMI ----------------
+    function calcEMI() {
+        const principal = parseFloat(document.getElementById('emi-amount').value);
+        const annualRate = parseFloat(document.getElementById('emi-rate').value);
+        let tenure = parseFloat(document.getElementById('emi-tenure').value);
+        const tenureType = document.getElementById('emi-tenureType').value;
+
+        if (isNaN(principal) || isNaN(annualRate) || isNaN(tenure)) {
+            alert("कृपया सभी वैल्यू सही भरें"); return;
+        }
+
+        let months = (tenureType === 'years') ? tenure * 12 : tenure;
+        let r = (annualRate / 12) / 100;
+
+        // EMI = $[P \times r \times (1+r)^n] / [(1+r)^n - 1]$
+        let emi = (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+        let totalPayment = emi * months;
+        let totalInterest = totalPayment - principal;
+
+        document.getElementById('emi-res-val').innerText = Math.round(emi).toLocaleString('en-IN');
+        document.getElementById('emi-res-p').innerText = principal.toLocaleString('en-IN');
+        document.getElementById('emi-res-i').innerText = Math.round(totalInterest).toLocaleString('en-IN');
+        document.getElementById('emi-res-total').innerText = Math.round(totalPayment).toLocaleString('en-IN');
+
+        renderPieChart('emiChart', 'मूल लोन राशि', principal, 'कुल देय ब्याज', totalInterest);
+        saveToHistory('EMI', `लोन: ₹${principal}, मासिक EMI: ₹${Math.round(emi)}`);
+    }
+
+    // ---------------- 4. LOAN COMPARISON ----------------
+    function compareLoans() {
+        function getEmiDetails(p, annualRate, years) {
+            let months = years * 12;
+            let r = (annualRate / 12) / 100;
+            let emi = (p * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+            let totalPay = emi * months;
+            return { emi, interest: totalPay - p, totalPay };
+        }
+
+        const p1 = parseFloat(document.getElementById('comp-p1').value);
+        const r1 = parseFloat(document.getElementById('comp-r1').value);
+        const t1 = parseFloat(document.getElementById('comp-t1').value);
+
+        const p2 = parseFloat(document.getElementById('comp-p2').value);
+        const r2 = parseFloat(document.getElementById('comp-r2').value);
+        const t2 = parseFloat(document.getElementById('comp-t2').value);
+
+        if(isNaN(p1) || isNaN(p2) || isNaN(r1) || isNaN(r2)) { alert("तुलना के लिए डेटा सही भरें"); return; }
+
+        let res1 = getEmiDetails(p1, r1, t1);
+        let res2 = getEmiDetails(p2, r2, t2);
+
+        document.getElementById('comp-emi1').innerText = "₹" + Math.round(res1.emi).toLocaleString('en-IN');
+        document.getElementById('comp-emi2').innerText = "₹" + Math.round(res2.emi).toLocaleString('en-IN');
+        document.getElementById('comp-i1').innerText = "₹" + Math.round(res1.interest).toLocaleString('en-IN');
+        document.getElementById('comp-i2').innerText = "₹" + Math.round(res2.interest).toLocaleString('en-IN');
+        document.getElementById('comp-total1').innerText = "₹" + Math.round(res1.totalPay).toLocaleString('en-IN');
+        document.getElementById('comp-total2').innerText = "₹" + Math.round(res2.totalPay).toLocaleString('en-IN');
+
+        saveToHistory('Comparison', `लोन A (EMI: ₹${Math.round(res1.emi)}) बनाम लोन B (EMI: ₹${Math.round(res2.emi)})`);
+    }
+
+    // ---------------- SHARE ON WHATSAPP ----------------
+    function shareReportWhatsApp() {
+        const activeTab = document.querySelector('#calcTabs .nav-link.active').id;
+        let textMessage = `*📊 प्रीमियम फाइनेंशियल कैलकुलेटर रिपोर्ट* %0A%0A`;
+        
+        if(activeTab === "si-tab") {
+            textMessage += `*प्रकार:* साधारण ब्याज (SI)%0A• मूलधन: ₹${document.getElementById('si-res-p').innerText}%0A• ब्याज राशि: ₹${document.getElementById('si-res-i').innerText}%0A• कुल धन: ₹${document.getElementById('si-res-total').innerText}`;
+        } else if(activeTab === "ci-tab") {
+            textMessage += `*प्रकार:* चक्रवृद्धि ब्याज (CI)%0A• मूलधन: ₹${document.getElementById('ci-res-p').innerText}%0A• चक्रवृद्धि ब्याज: ₹${document.getElementById('ci-res-i').innerText}%0A• कुल मिश्रधन: ₹${document.getElementById('ci-res-total').innerText}`;
+        } else if(activeTab === "emi-tab") {
+            textMessage += `*प्रकार:* लोन EMI रिपोर्ट%0A• मासिक EMI: ₹${document.getElementById('emi-res-val').innerText}%0A• कुल ब्याज: ₹${document.getElementById('emi-res-i').innerText}%0A• कुल भुगतान: ₹${document.getElementById('emi-res-total').innerText}`;
+        } else {
+            textMessage += `*प्रकार:* लोन तुलना रिपोर्ट दोनों विकल्पों का विवरण टेबल में देखें।`;
+        }
+        
+        textMessage += `%0A%0A👉 _E-Gyan Setu डिजिटल कैलकुलेटर द्वारा बनाया गया हिसाब।_`;
         window.open(`https://wa.me/?text=${textMessage}`, '_blank');
     }
+
+    // ---------------- DOWNLOAD PDF REPORT ----------------
+    function downloadReportPDF() {
+        const element = document.getElementById('printableReport');
+        const opt = {
+            margin:       10,
+            filename:     'Financial_Report.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    // प्रारंभिक लोड पर प्रथम गणना
+    window.onload = function() {
+        calcSimpleInterest();
+        loadHistory();
+    };
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
