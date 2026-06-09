@@ -1049,72 +1049,111 @@
             el.style.color = '#1e293b';
             el.style.fontWeight = '700';
         });
+            function exportSummaryPDF() {
+        let activeTab = document.querySelector('.nav-tabs-custom .tab-btn.active');
+        let titleReport = activeTab ? activeTab.innerText : "विवरण";
+        let targetPanel = document.querySelector('.custom-tab-panel.active');
+        if(!targetPanel) return;
         
-        // महत्वपूर्ण वित्तीय आंकड़ों के लिए स्टैंडर्ड कलर्स (जो प्रिंट में साफ आएं)
-        pdfWrapper.querySelectorAll('.text-success').forEach(el => { el.style.color = '#15803d'; el.style.fontWeight = '700'; }); // गहरे हरे रंग का शेड
-        pdfWrapper.querySelectorAll('.text-danger').forEach(el => { el.style.color = '#b91c1c'; el.style.fontWeight = '700'; });  // गहरा लाल रंग
-        pdfWrapper.querySelectorAll('.text-primary, .text-info').forEach(el => { el.style.color = '#0369a1'; el.style.fontWeight = '700'; }); // गहरा नीला रंग
+        let clone = targetPanel.cloneNode(true);
+        let pdfWrapper = document.createElement('div');
+        pdfWrapper.style.padding = '40px 30px';
+        pdfWrapper.style.background = '#ffffff'; // ओरिजिनल साफ वाइट शीट बैकग्राउंड
+
+        // 📝 हेडर स्टाइल - पूरी तरह क्लीन और स्पष्ट चारकोल डार्क लुक
+        let headerHTML = `
+            <div style="border-bottom: 2.5px solid #1e293b; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif;">
+                <div>
+                    <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.5px;">FINTECH CALCULATOR PRO</h2>
+                    <p style="color: #475569; margin: 4px 0 0 0; font-size: 12px; font-weight: 700;">आधिकारिक डिजिटल वित्तीय विवरण रिपोर्ट</p>
+                </div>
+                <div style="text-align: right; font-size: 12px; color: #1e293b; font-weight: 700; line-height: 1.5;">
+                    <strong>दिनांक:</strong> ${new Date().toLocaleDateString('hi-IN')}<br>
+                    <strong>प्रकार:</strong> <span style="color: #0369a1; font-weight: 800;">${titleReport}</span>
+                </div>
+            </div>
+        `;
         
-        // 📊 कार्ड्स और रिजल्ट बॉक्स की री-स्टाइलिंग (हल्का ग्रे और स्पष्ट बॉर्डर)
-        pdfWrapper.querySelectorAll('.visual-bar-hold, .live-badge-box, .result-display-large, .pro-card').forEach(el => {
-            el.style.background = '#f8fafc'; // बेहद हल्का और साफ बैकग्राउंड
-            el.style.border = '1px solid #cbd5e1'; // स्पष्ट ग्रे बॉर्डर
+        pdfWrapper.innerHTML = headerHTML;
+        pdfWrapper.appendChild(clone);
+        
+        // ✍️ साधारण टेक्स्ट और लेबल्स को गहरा स्लेटी (Charcoal) और बोल्ड किया ताकि आंखों पर जोर न पड़े
+        pdfWrapper.querySelectorAll('.text-muted, p, small, label, .bar-label').forEach(el => {
+            el.style.color = '#334155';
+            el.style.fontWeight = '700'; 
+        });
+
+        // 🎯 हेडिंग्स, स्पैन और मुख्य वैल्यूज को एक्स्ट्रा बोल्ड और डीप डार्क किया (हाई कॉन्ट्रास्ट के लिए)
+        pdfWrapper.querySelectorAll('span, td, th, h6, h5, h4, h3, h2').forEach(el => {
+            el.style.color = '#1e293b';
+            el.style.fontWeight = '800'; 
+        });
+        
+        // 🎨 वित्तीय आंकड़ों के कलर्स को पीडीएफ फ्रेंडली डार्क शेड्स दिए (जो प्रिंट में धुंधले नहीं दिखेंगे)
+        pdfWrapper.querySelectorAll('.text-success').forEach(el => { el.style.color = '#15803d'; el.style.fontWeight = '800'; }); // गहरा हरा
+        pdfWrapper.querySelectorAll('.text-danger').forEach(el => { el.style.color = '#b91c1c'; el.style.fontWeight = '800'; });  // गहरा लाल
+        pdfWrapper.querySelectorAll('.text-primary').forEach(el => { el.style.color = '#0369a1'; el.style.fontWeight = '800'; }); // गहरा नीला
+        pdfWrapper.querySelectorAll('.text-info').forEach(el => { el.style.color = '#1d4ed8'; el.style.fontWeight = '800'; });    // रॉयल ब्लू
+        
+        // 📊 रिपोर्ट के अंदर के कार्ड्स और बॉक्स को सॉफ्ट क्लीन बैकग्राउंड और स्पष्ट बॉर्डर्स दिए
+        pdfWrapper.querySelectorAll('.visual-bar-hold, .live-badge-box, .result-display-large, .pro-card, .form-control, .form-select').forEach(el => {
+            el.style.background = '#f8fafc'; // बेहद साफ हल्का ग्रे बैकग्राउंड
+            el.style.border = '1px solid #cbd5e1'; // स्पष्ट बॉर्डर
             el.style.padding = '18px';
-            el.style.borderRadius = '8px';
+            el.style.borderRadius = '10px';
             el.style.marginBottom = '15px';
             el.style.boxShadow = 'none';
         });
 
-        // 📋 टेबल को 'Zen-Style' (पढ़ने में आसान) बनाना
+        // 📋 पूरी टेबल का स्ट्रक्चर पीडीएफ फ्रेंडली सेट किया
         pdfWrapper.querySelectorAll('table').forEach(table => {
             table.style.width = '100%';
             table.style.borderCollapse = 'collapse';
-            table.style.marginTop = '10px';
         });
 
-        // टेबल हेडर स्टाइल
-        pdfWrapper.querySelectorAll('th').forEach(el => {
-            el.style.backgroundColor = '#f1f5f9'; // सॉलिड लाइट ग्रे हेडर
+        // टेबल हेडर को क्लीन और साफ लुक देना
+        pdfWrapper.querySelectorAll('.table-custom th, th').forEach(el => {
+            el.style.backgroundColor = '#f1f5f9'; // सॉलिड लाइट हेडर बैकग्राउंड
             el.style.color = '#1e293b';
-            el.style.fontWeight = '700';
+            el.style.fontWeight = '800';
             el.style.padding = '10px 12px';
             el.style.borderBottom = '2px solid #cbd5e1';
-            el.style.textAlign = 'left';
         });
 
-        // टेबल की रो (Rows) को 'Zebra Striping' देना ताकि डेटा आपस में मिक्स न हो
+        // 🔄 'Zebra Striping' इफ़ेक्ट: एक लाइन वाइट और एक लाइन हल्की ग्रे, ताकि डेटा आसानी से पढ़ा जा सके
         pdfWrapper.querySelectorAll('tr').forEach((row, index) => {
-            if (index > 0) { // हेडर को छोड़कर
-                row.style.backgroundColor = index % 2 === 0 ? '#f8fafc' : '#ffffff'; // एक लाइन वाइट, एक लाइन हल्की ग्रे
+            if (index > 0) { // हेडर रो को छोड़कर
+                row.style.backgroundColor = index % 2 === 0 ? '#f8fafc' : '#ffffff';
             }
         });
 
-        // टेबल सेल्स स्टाइल
+        // टेबल के बाकी सेल्स (Data Cells)
         pdfWrapper.querySelectorAll('td').forEach(el => {
             el.style.padding = '10px 12px';
             el.style.borderBottom = '1px solid #e2e8f0';
-            el.style.fontSize = '13px';
+            el.style.color = '#1e293b';
+            el.style.fontSize = '14px';
         });
         
-        // फालतू तत्वों को हटाना
-        pdfWrapper.querySelectorAll('button, .range-slider').forEach(el => el.style.display = 'none');
+        // बटन्स और रेंज स्लाइडर्स को पीडीएफ से पूरी तरह गायब करना
+        pdfWrapper.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
+        pdfWrapper.querySelectorAll('.range-slider').forEach(slider => slider.style.display = 'none');
 
         document.body.appendChild(pdfWrapper);
 
-        // PDF एक्सपोर्ट कॉन्फ़िगरेशन ऑप्शंस
         let opt = {
             margin:       [12, 12, 12, 12],
-            filename:     `Fintech_Report_${titleReport.replace(/\s+/g, '_')}.pdf`,
+            filename:     `Financial_Report_${titleReport.replace(/\s+/g, '_')}.pdf`,
             image:        { type: 'jpeg', quality: 1.0 },
             html2canvas:  { 
-                scale: 2.5, 
+                scale: 2.5, // क्रिस्टल क्लियर फॉन्ट्स के लिए ताकि ज़ूम करने पर फटे नहीं
                 useCORS: true, 
                 backgroundColor: '#ffffff' 
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        // पीडीएफ जनरेट करके डिलीट करना
+        // पीडीएफ डाउनलोड होने के बाद टेम्पररी रैपर को स्क्रीन से हटाना
         html2pdf().set(opt).from(pdfWrapper).save().then(() => {
             document.body.removeChild(pdfWrapper);
         }).catch(err => {
@@ -1122,6 +1161,7 @@
             document.body.removeChild(pdfWrapper);
         });
     }
+
 
 </script>
 </body>
