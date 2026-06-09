@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Interest & EMI Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f0f2f5; }
+        .card { border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .result-box { background: #2c3e50; color: white; border-radius: 15px; }
+        .btn-custom { background: #3498db; color: white; border-radius: 10px; padding: 12px; }
+    </style>
+</head>
+<body class="p-3">
+
+<div class="container max-width-500">
+    <div class="card p-4">
+        <h2 class="text-center text-primary mb-4">💰 एडवांस ब्याज कैलकुलेटर</h2>
+        
+        <div class="mb-3">
+            <label>मूलधन (Principal Amount - ₹)</label>
+            <input type="number" id="p" class="form-control" placeholder="10000">
+        </div>
+
+        <div class="mb-3">
+            <label>ब्याज दर (%)</label>
+            <input type="number" id="r" class="form-control" placeholder="2">
+            <select id="rateType" class="form-select mt-2">
+                <option value="monthly">मासिक (प्रति सैकड़ा)</option>
+                <option value="yearly">सालाना (बैंक रेट)</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label>शुरुआत तारीख</label>
+                <input type="date" id="start" class="form-control">
+            </div>
+            <div class="col-6 mb-3">
+                <label>अंत तारीख</label>
+                <input type="date" id="end" class="form-control">
+            </div>
+        </div>
+
+        <button class="btn btn-primary w-100 btn-custom" onclick="calculate()">कैलकुलेट करें</button>
+
+        <div id="result" class="result-box p-3 mt-4 d-none">
+            <p>समय: <span id="time"></span></p>
+            <h4 class="text-warning">ब्याज: ₹<span id="int"></span></h4>
+            <h5>कुल राशि: ₹<span id="total"></span></h5>
+            <button class="btn btn-success btn-sm mt-2" onclick="shareWhatsApp()">WhatsApp पर भेजें 📱</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('end').valueAsDate = new Date();
+
+    function calculate() {
+        const p = parseFloat(document.getElementById('p').value);
+        const r = parseFloat(document.getElementById('r').value);
+        const start = new Date(document.getElementById('start').value);
+        const end = new Date(document.getElementById('end').value);
+        
+        if(!p || !r) return alert("कृपया जानकारी भरें");
+
+        const diffTime = Math.abs(end - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const rateType = document.getElementById('rateType').value;
+        
+        let interest = (rateType === 'monthly') ? (p * r * (diffDays/30)) / 100 : (p * r * (diffDays/365)) / 100;
+        
+        document.getElementById('time').innerText = Math.floor(diffDays/30) + " माह " + (diffDays%30) + " दिन";
+        document.getElementById('int').innerText = interest.toFixed(2);
+        document.getElementById('total').innerText = (p + interest).toFixed(2);
+        document.getElementById('result').classList.remove('d-none');
+    }
+
+    function shareWhatsApp() {
+        const total = document.getElementById('total').innerText;
+        const msg = `मेरा हिसाब:\nकुल राशि: ₹${total}\nE-Gyan Setu कैलकुलेटर से निकाला गया।`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+    }
+</script>
+</body>
+</html>
