@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सुपर फिनटेक कैलकुलेटर प्रो | Premium Edition</title>
+    <title>आदर्श फिनटेक कैलकुलेटर प्रो | Premium Edition</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -377,14 +379,14 @@
                                         </div>
                                     </div>
                                     <div class="col-4 d-flex align-items-center">
-                                        <button class="btn btn-sm btn-outline-success w-100 py-2 font-weight-bold" onclick="saveCurrentToHistory('एडवांस EMI')"><i class="fa-solid fa-bookmark"></i> सेव</button>
+                                        <button class="btn btn-sm btn-outline-success w-100 py-2 fw-bold" onclick="saveCurrentToHistory('एडवांस EMI')"><i class="fa-solid fa-bookmark"></i> सेव</button>
                                     </div>
                                 </div>
                                 <div class="chart-hold" style="height:120px;"><canvas id="chartEMI"></canvas></div>
                                 <h6 class="fw-bold mt-2 mb-1 text-muted small">शेड्यूल प्रोग्रेस (शुरुआती 5 महीने)</h6>
                                 <div class="table-wrap">
                                     <table class="table table-custom table-hover">
-                                        <thead><tr><th>माह</th><th>EMI</th><th>ब्याज component</th><th>मूलधन</th><th>बचा बैलेंस</th></tr></thead>
+                                        <thead><tr><th>माह</th><th>EMI</th><th>ब्याज कंपोनेंट</th><th>मूलधन</th><th>बचा बैलेंस</th></tr></thead>
                                         <tbody id="emi-table-body"></tbody>
                                     </table>
                                 </div>
@@ -487,7 +489,7 @@
         // Initial Calculations Run
         runActiveTabLogic();
 
-        // Lazy-loading performance setup for tabs
+        // Dynamic lazy-loading listener linked to Bootstrap Pills
         document.querySelectorAll('button[data-bs-toggle="pill"]').forEach(tab => {
             tab.addEventListener('shown.bs.tab', function() {
                 runActiveTabLogic();
@@ -498,10 +500,11 @@
     function handleSIRateLabelChange() {
         let type = document.getElementById('si-type').value;
         let label = document.getElementById('si-rate-label');
+        let currentRate = Number(document.getElementById('si-rate').value).toFixed(2);
         if(type === 'monthly') {
-            label.innerHTML = `ब्याज दर (₹ सैकड़ा प्रति माह) <span><span id="lbl-si-r">${Number(document.getElementById('si-rate').value).toFixed(2)}</span>%</span>`;
+            label.innerHTML = `ब्याज दर (₹ सैकड़ा प्रति माह) <span><span id="lbl-si-r">${currentRate}</span>%</span>`;
         } else {
-            label.innerHTML = `ब्याज दर (वार्षिक बैंक दर) <span><span id="lbl-si-r">${Number(document.getElementById('si-rate').value).toFixed(2)}</span>%</span>`;
+            label.innerHTML = `ब्याज दर (वार्षिक बैंक दर) <span><span id="lbl-si-r">${currentRate}</span>%</span>`;
         }
     }
 
@@ -527,7 +530,7 @@
         if(src.includes('emi-t') || dest.includes('emi-t')) document.getElementById('lbl-emi-t').innerText = val;
     }
 
-    // 1. SIMPLE INTEREST ENGINE (With Floating point fix & Localized logic)
+    // 1. SIMPLE INTEREST ENGINE
     function updateSI() {
         let p = parseFloat(document.getElementById('si-principal').value) || 0;
         let r = parseFloat(document.getElementById('si-rate').value) || 0;
@@ -548,9 +551,8 @@
 
         document.getElementById('si-res-duration').innerText = `${yrs} वर्ष, ${mths} माह, ${days} दिन (कुल ${totalDays} दिन)`;
 
-        // Fixing Floating Point Errors by strict parsing
         let interest = (type === 'monthly') ? (p * r * (totalDays / 30)) / 100 : (p * r * (totalDays / 365)) / 100;
-        interest = Math.round((interest + Number.EPSILON) * 100) / 100; // Zero-rounding error logic
+        interest = Math.round((interest + Number.EPSILON) * 100) / 100;
         let total = Math.round((p + interest) * 100) / 100;
 
         document.getElementById('si-res-p').innerText = "₹" + Math.round(p).toLocaleString('hi-IN');
@@ -651,7 +653,7 @@
         }
     }
 
-    // ON-DEVICE PRIVACY SECURE HISTORY LOGS
+    // ON-DEVICE HISTORY STORAGE
     function saveCurrentToHistory(type) {
         let inputVal = "0";
         let outputVal = "0";
@@ -741,14 +743,14 @@
         runActiveTabLogic();
     }
 
-    // PROFESSIONAL INVOICE STYLE STATEMENT PDF GENERATION
+    // STATEMENT PDF GENERATION
     function exportSummaryPDF() {
         let activeTab = document.querySelector('.nav-tabs-custom .nav-link.active').id;
         let targetId = "";
         let titleReport = "";
 
-        if(activeTab === 'si-t') { targetId = "si-summary-target"; titleReport = "साधारण ब्याज (Simple Interest) विवरण"; }
-        if(activeTab === 'ci-t') { targetId = "ci-summary-target"; titleReport = "चक्रवृद्धि ब्याज (Compound Interest) विवरण"; }
+        if(activeTab === 'si-t') { targetId = "si-summary-target"; titleReport = "साधारण ब्याज विवरण"; }
+        if(activeTab === 'ci-t') { targetId = "ci-summary-target"; titleReport = "चक्रवृद्धि ब्याज विवरण"; }
         if(activeTab === 'emi-t') { targetId = "emi-summary-target"; titleReport = "लोन EMI ब्रेकअप स्टेटमेंट"; }
         if(activeTab === 'comp-t') { targetId = "comp-summary-target"; titleReport = "लोन तुलना मैट्रिक्स सारणी"; }
 
@@ -757,7 +759,6 @@
         
         let clone = originalElement.cloneNode(true);
         
-        // Premium PDF Sheet Builder
         let pdfWrapper = document.createElement('div');
         pdfWrapper.id = "temporary-pdf-container";
         pdfWrapper.style.padding = '40px 30px';
@@ -782,7 +783,6 @@
         pdfWrapper.innerHTML = headerHTML;
         pdfWrapper.appendChild(clone);
         
-        // Printable formatting injected styles
         pdfWrapper.querySelectorAll('.text-muted, span, td, th, p, h6').forEach(el => el.style.color = '#1e293b');
         pdfWrapper.querySelectorAll('.text-success').forEach(el => el.style.color = '#16a34a');
         pdfWrapper.querySelectorAll('.text-danger').forEach(el => el.style.color = '#dc2626');
@@ -793,15 +793,13 @@
             el.style.padding = '12px';
         });
 
-        // Hiding unnecessary UI tools from PDF output
         let chartContainer = pdfWrapper.querySelector('.chart-hold');
         if(chartContainer) chartContainer.style.display = 'none';
         let scheduleTable = pdfWrapper.querySelector('.table-wrap');
-        if(scheduleTable) scheduleTable.style.maxHeight = 'none'; // full visible block in document sheet
+        if(scheduleTable) scheduleTable.style.maxHeight = 'none';
         let saveBtn = pdfWrapper.querySelector('button');
         if(saveBtn) saveBtn.style.display = 'none';
 
-        // Adding Professional Endorsed Stamp Box
         let footerHTML = `
             <div style="margin-top: 50px; pt-4; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center;">
                 <p style="font-size: 10px; color: #94a3b8; width: 60%;">* यह एक कंप्यूटर जनित डिजिटल वित्तीय रिपोर्ट है, जिसे पूर्णतः स्थानीय सुरक्षित एल्गोरिदम द्वारा मूल्यांकित किया गया है।</p>
