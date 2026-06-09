@@ -3,85 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Interest & EMI Calculator</title>
+    <title>एडवांस डिजिटल ब्याज कैलकुलेटर</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #f0f2f5; }
-        .card { border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .result-box { background: #2c3e50; color: white; border-radius: 15px; }
-        .btn-custom { background: #3498db; color: white; border-radius: 10px; padding: 12px; }
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #198754;
+            --dark-color: #212529;
+            --light-bg: #f8f9fa;
+        }
+        body {
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .calc-wrapper {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        .calc-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        .calc-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+        .calc-header p {
+            font-size: 13px;
+            margin: 5px 0 0 0;
+            opacity: 0.8;
+        }
+        .calc-body {
+            padding: 25px 20px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        .input-group-text {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+        }
+        .form-control, .form-select {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1.5px solid #dee2e6;
+            font-size: 16px;
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+            border-color: var(--primary-color);
+        }
+        .btn-calc {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            color: white;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.3);
+        }
+        .btn-calc:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(56, 239, 125, 0.4);
+            color: white;
+        }
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            border: 1px solid #e9ecef;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .res-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed #dee2e6;
+        }
+        .res-item:last-child {
+            border-bottom: none;
+        }
+        .res-label {
+            color: #6c757d;
+            font-size: 15px;
+        }
+        .res-val {
+            font-weight: 700;
+            color: var(--dark-color);
+            font-size: 16px;
+        }
+        .res-total-box {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 5px solid #2e7d32;
+        }
+        .footer-credit {
+            text-align: center;
+            padding: 15px;
+            background: #f1f3f5;
+            font-size: 13px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer-credit a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        @media print {
+            body { background: white; }
+            .calc-wrapper { box-shadow: none; max-width: 100%; }
+            .btn, .footer-credit, .calc-header p { display: none !important; }
+            .result-card { display: block !important; }
+        }
     </style>
 </head>
-<body class="p-3">
+<body>
 
-<div class="container max-width-500">
-    <div class="card p-4">
-        <h2 class="text-center text-primary mb-4">💰 एडवांस ब्याज कैलकुलेटर</h2>
-        
+<div class="calc-wrapper">
+    <!-- Header -->
+    <div class="calc-header">
+        <h2><i class="fa-solid fa-calculator me-2"></i>स्मार्ट ब्याज कैलकुलेटर</h2>
+        <p>गाँव का देसी ब्याज और बैंक का ब्याज मिनटों में निकालें</p>
+    </div>
+
+    <!-- Body -->
+    <div class="calc-body">
+        <!-- Principal -->
         <div class="mb-3">
-            <label>मूलधन (Principal Amount - ₹)</label>
-            <input type="number" id="p" class="form-control" placeholder="10000">
-        </div>
-
-        <div class="mb-3">
-            <label>ब्याज दर (%)</label>
-            <input type="number" id="r" class="form-control" placeholder="2">
-            <select id="rateType" class="form-select mt-2">
-                <option value="monthly">मासिक (प्रति सैकड़ा)</option>
-                <option value="yearly">सालाना (बैंक रेट)</option>
-            </select>
-        </div>
-
-        <div class="row">
-            <div class="col-6 mb-3">
-                <label>शुरुआत तारीख</label>
-                <input type="date" id="start" class="form-control">
-            </div>
-            <div class="col-6 mb-3">
-                <label>अंत तारीख</label>
-                <input type="date" id="end" class="form-control">
+            <label class="form-label">मूलधन (Principal Amount)</label>
+            <div class="input-group">
+                <span class="input-group-text">₹</span>
+                <input type="number" id="principal" class="form-control" placeholder="रकम दर्ज करें (जैसे: 50000)" autocomplete="off">
             </div>
         </div>
 
-        <button class="btn btn-primary w-100 btn-custom" onclick="calculate()">कैलकुलेट करें</button>
-
-        <div id="result" class="result-box p-3 mt-4 d-none">
-            <p>समय: <span id="time"></span></p>
-            <h4 class="text-warning">ब्याज: ₹<span id="int"></span></h4>
-            <h5>कुल राशि: ₹<span id="total"></span></h5>
-            <button class="btn btn-success btn-sm mt-2" onclick="shareWhatsApp()">WhatsApp पर भेजें 📱</button>
+        <!-- Rate & Type -->
+        <div class="row text-start">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">ब्याज दर (Rate of Interest)</label>
+                <div class="input-group">
+                    <input type="number" id="rate" step="0.01" class="form-control" placeholder="दर लिखें (जैसे: 2)">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">ब्याज का प्रकार (Type)</label>
+                <select id="rateType" class="form-select">
+                    <option value="monthly" selected>मासिक (गाँव का तरीका - ₹ सैकड़ा)</option>
+                    <option value="yearly">सालाना (बैंक का तरीका)</option>
+                </select>
+            </div>
         </div>
+
+        <!-- Dates -->
+        <div class="row text-start">
+            <div class="col-6 mb-4">
+                <label class="form-label">शुरुआत की तारीख</label>
+                <input type="date" id="startDate" class="form-control">
+            </div>
+            <div class="col-6 mb-4">
+                <label class="form-label">आज/अंत की तारीख</label>
+                <input type="date" id="endDate" class="form-control">
+            </div>
+        </div>
+
+        <!-- Calculate Button -->
+        <button class="btn btn-calc w-100 mb-4" onclick="calculateAdvancedInterest()">
+            <i class="fa-solid fa-gears me-2"></i>हिसाब कैलकुलेट करें
+        </button>
+
+        <!-- Results Box -->
+        <div class="result-card p-4" id="resultCard">
+            <h4 class="text-center mb-3 text-secondary style-font" style="font-size: 18px; font-weight: 600;">
+                <i class="fa-solid fa-receipt me-2"></i>पूरा विवरण (Report)
+            </h4>
+            
+            <div class="res-item">
+                <span class="res-label">मूलधन राशि:</span>
+                <span class="res-val">₹<span id="lblPrincipal">0</span></span>
+            </div>
+            <div class="res-item">
+                <span class="res-label">ब्याज दर:</span>
+                <span class="res-val"><span id="lblRate">0</span>% (<span id="lblType">मासिक</span>)</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label">कुल समय अवधि:</span>
+                <span class="res-val text-primary" id="lblTime">0 दिन</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label">केवल ब्याज राशि:</span>
+                <span class="res-val text-danger" style="font-size: 18px;">₹<span id="lblInterest">0</span></span>
+            </div>
+            
+            <div class="res-total-box mt-3 d-flex justify-content-between align-items-center">
+                <span class="fw-bold text-success" style="font-size: 16px;">कुल धन (मूलधन + ब्याज):</span>
+                <span class="fw-bold text-success" style="font-size: 20px;">₹<span id="lblTotal">0</span></span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="row g-2 mt-3">
+                <div class="col-6">
+                    <button class="btn btn-success btn-sm w-100 p-2 text-white" style="border-radius: 8px;" onclick="shareOnWhatsApp()">
+                        <i class="fa-brands fa-whatsapp me-1"></i>WhatsApp शेयर
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-outline-secondary btn-sm w-100 p-2" style="border-radius: 8px;" onclick="window.print()">
+                        <i class="fa-solid fa-print me-1"></i>प्रिंट हिसाब
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-credit">
+        Designed & Hosted by <a href="https://e-gyansetu.com" target="_blank">E-Gyan Setu</a>
     </div>
 </div>
 
+<!-- JavaScript Logic -->
 <script>
-    document.getElementById('end').valueAsDate = new Date();
+    // डिफ़ॉल्ट रूप से आज की तारीख सेट करें
+    document.getElementById('endDate').valueAsDate = new Date();
 
-    function calculate() {
-        const p = parseFloat(document.getElementById('p').value);
-        const r = parseFloat(document.getElementById('r').value);
-        const start = new Date(document.getElementById('start').value);
-        const end = new Date(document.getElementById('end').value);
-        
-        if(!p || !r) return alert("कृपया जानकारी भरें");
-
-        const diffTime = Math.abs(end - start);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    function calculateAdvancedInterest() {
+        const principal = parseFloat(document.getElementById('principal').value);
+        const rate = parseFloat(document.getElementById('rate').value);
+        const startDateVal = document.getElementById('startDate').value;
+        const endDateVal = document.getElementById('endDate').value;
         const rateType = document.getElementById('rateType').value;
-        
-        let interest = (rateType === 'monthly') ? (p * r * (diffDays/30)) / 100 : (p * r * (diffDays/365)) / 100;
-        
-        document.getElementById('time').innerText = Math.floor(diffDays/30) + " माह " + (diffDays%30) + " दिन";
-        document.getElementById('int').innerText = interest.toFixed(2);
-        document.getElementById('total').innerText = (p + interest).toFixed(2);
-        document.getElementById('result').classList.remove('d-none');
+
+        if (isNaN(principal) || isNaN(rate) || !startDateVal || !endDateVal) {
+            alert("कृपया सभी फील्ड्स में सही जानकारी भरें!");
+            return;
+        }
+
+        const start = new Date(startDateVal);
+        const end = new Date(endDateVal);
+
+        if (end < start) {
+            alert("अंत की तारीख, शुरुआत की तारीख से पहले की नहीं हो सकती!");
+            return;
+        }
+
+        // दिनों का अंतर
+        const diffTime = Math.abs(end - start);
+        const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // सटीक वर्ष, महीने और दिन की गणना (गाँव के व्यावहारिक तरीके से)
+        let years = Math.floor(totalDays / 365);
+        let remainingDays = totalDays % 365;
+        let months = Math.floor(remainingDays / 30);
+        let days = remainingDays % 30;
+
+        let timeText = "";
+        if (years > 0) timeText += `${years} वर्ष `;
+        if (months > 0) timeText += `${months} माह `;
+        if (days > 0) timeText += `${days} दिन`;
+        if (totalDays === 0) timeText = "0 दिन";
+
+        // ब्याज की गणना
+        let interest = 0;
+        if (rateType === "monthly") {
+            // गाँव का तरीका: दर प्रति माह है
+            const totalMonths = totalDays / 30;
+            interest = (principal * rate * totalMonths) / 100;
+        } else {
+            // बैंक का तरीका: दर प्रति वर्ष है
+            const totalYears = totalDays / 365;
+            interest = (principal * rate * totalYears) / 100;
+        }
+
+        const totalAmount = principal + interest;
+
+        // स्क्रीन पर डेटा अपडेट करना
+        document.getElementById('lblPrincipal').innerText = principal.toLocaleString('en-IN');
+        document.getElementById('lblRate').innerText = rate;
+        document.getElementById('lblType').innerText = (rateType === "monthly") ? "मासिक" : "सालाना";
+        document.getElementById('lblTime').innerText = `${timeText} (कुल ${totalDays} दिन)`;
+        document.getElementById('lblInterest').innerText = interest.toFixed(2);
+        document.getElementById('lblTotal').innerText = totalAmount.toFixed(2);
+
+        // रिजल्ट बॉक्स को स्मूथली दिखाना
+        document.getElementById('resultCard').style.display = "block";
     }
 
-    function shareWhatsApp() {
-        const total = document.getElementById('total').innerText;
-        const msg = `मेरा हिसाब:\nकुल राशि: ₹${total}\nE-Gyan Setu कैलकुलेटर से निकाला गया।`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+    function shareOnWhatsApp() {
+        const p = document.getElementById('lblPrincipal').innerText;
+        const r = document.getElementById('lblRate').innerText;
+        const type = document.getElementById('lblType').innerText;
+        const time = document.getElementById('lblTime').innerText;
+        const interest = document.getElementById('lblInterest').innerText;
+        const total = document.getElementById('lblTotal').innerText;
+
+        const textMessage = `*📊 डिजिटल ब्याज रिपोर्ट *%0A%0A` +
+                            `• *मूलधन:* ₹${p}%0A` +
+                            `• *ब्याज दर:* ${r}% (${type})%0A` +
+                            `• *समय अवधि:* ${time}%0A` +
+                            `• *कुल ब्याज:* ₹${interest}%0A` +
+                            `-------------------------%0A` +
+                            `• *कुल देय राशि:* ₹${total}%0A%0A` +
+                            `👉 _E-Gyan Setu डिजिटल कैलकुलेटर द्वारा बनाया गया हिसाब।_`;
+
+        window.open(`https://wa.me/?text=${textMessage}`, '_blank');
     }
 </script>
+
 </body>
 </html>
