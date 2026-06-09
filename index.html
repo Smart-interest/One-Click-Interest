@@ -3,39 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>फिनटेक सास प्रो प्लस | Enterprise Financial SaaS Suite</title>
-    <meta name="description" content="एडवांस लोन प्री-पेमेंट, महंगाई एडजस्टेड चक्रवृद्धि ब्याज, दाम-दुपट्टा नियम, और आंशिक भुगतान ट्रैकर के साथ भारत का सबसे आधुनिक वित्तीय सास टूल।">
+    <title>एडवांस प्रो फाइनेंशियल कैलकुलेटर | Advanced FinTech Calculator</title>
+    <meta name="description" content="साधारण ब्याज, चक्रवृद्धि ब्याज, लोन EMI, मोरेटोरियम और प्रोसेसिंग फीस के साथ दो लोनों की एडवांस तुलना। आधुनिक चार्ट्स और PDF एक्सपोर्ट के साथ।">
+    <meta name="keywords" content="Advanced Interest Calculator, EMI Calculator with Processing Fee, Loan Amortization Schedule, FinTech Tools Hindi">
     
+    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Pro Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Premium Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --bg-body: linear-gradient(135deg, #090d16 0%, #111827 100%);
-            --card-bg: rgba(17, 24, 39, 0.75);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --accent: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.25);
-            --success: #34d399;
-            --danger: #f87171;
-            --input-bg: #1f2937;
+            --bg-body: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --glass-card: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary-accent: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.2);
+            --success-accent: #34d399;
+            --danger-accent: #f87171;
+            --input-bg: #1e293b;
         }
 
         [data-theme="light"] {
-            --bg-body: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --border-color: rgba(15, 23, 42, 0.08);
+            --bg-body: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --glass-card: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(15, 23, 42, 0.08);
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --accent: #0284c7;
-            --accent-glow: rgba(2, 132, 199, 0.15);
-            --success: #16a34a;
-            --danger: #dc2626;
+            --primary-accent: #0284c7;
+            --primary-glow: rgba(2, 132, 199, 0.15);
+            --success-accent: #16a34a;
+            --danger-accent: #dc2626;
             --input-bg: #ffffff;
         }
 
@@ -43,614 +49,825 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: var(--bg-body);
             background-attachment: fixed;
-            color: var(--text-main);
             min-height: 100vh;
-            transition: all 0.3s ease;
-            padding: 30px 10px;
+            color: var(--text-main);
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s;
+            padding: 40px 10px;
         }
 
-        .saas-container {
-            max-width: 1200px;
-            margin: auto;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 28px;
+        .main-wrapper {
+            background: var(--glass-card);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            max-width: 1400px;
+            margin: auto;
             overflow: hidden;
         }
 
-        .saas-header {
-            padding: 30px;
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
-        }
+        .app-header{
+text-align:center;
+padding:60px 30px;
+border-bottom:1px solid var(--glass-border);
+background:
+radial-gradient(circle at top right,#38bdf830,transparent 40%),
+radial-gradient(circle at bottom left,#8b5cf620,transparent 40%);
+}
 
-        .theme-toggle {
+        .theme-switch {
             position: absolute;
-            top: 30px;
-            right: 30px;
-            border: 1px solid var(--border-color);
+            top: 25px;
+            right: 25px;
+            z-index: 100;
             background: var(--input-bg);
+            border: 1px solid var(--glass-border);
             color: var(--text-main);
-            width: 44px;
-            height: 44px;
             border-radius: 50%;
-            cursor: pointer;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
+        .theme-switch:active { transform: scale(0.9); }
 
-        .nav-pills-saas .nav-link {
+        .nav-tabs-custom {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            border: none;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .nav-tabs-custom .nav-link {
+            border: 1px solid var(--glass-border) !important;
+            background: rgba(255,255,255,0.02);
             color: var(--text-muted);
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border-color);
-            margin: 5px;
-            border-radius: 14px;
             font-weight: 600;
-            padding: 12px 20px;
-            transition: all 0.3s;
+            padding: 12px 24px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        .nav-tabs-custom .nav-link.active {
+            background: var(--primary-accent) !important;
+            color: #fff !important;
+            box-shadow: 0 8px 20px var(--primary-glow);
+            border-color: var(--primary-accent) !important;
         }
 
-        .nav-pills-saas .nav-link.active {
-            background: var(--accent) !important;
-            color: white !important;
-            box-shadow: 0 8px 20px var(--accent-glow);
-            border-color: var(--accent);
-        }
+        .pro-card{
+background:
+linear-gradient(
+145deg,
+rgba(255,255,255,.05),
+rgba(255,255,255,.015)
+);
+border:1px solid rgba(255,255,255,.08);
+border-radius:28px;
+padding:30px;
+height:100%;
+transition:.35s;
+}
 
-        .feature-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 25px;
-            height: 100%;
+.pro-card:hover{
+transform:translateY(-6px);
+box-shadow:
+0 25px 50px rgba(0,0,0,.35),
+0 0 30px rgba(56,189,248,.12);
+}
+
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .form-control, .form-select {
             background: var(--input-bg);
             color: var(--text-main);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px;
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-weight: 500;
         }
-
         .form-control:focus, .form-select:focus {
             background: var(--input-bg);
             color: var(--text-main);
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px var(--accent-glow);
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 4px var(--primary-glow);
         }
 
-        .range-slider-pro {
+        /* Premium Custom Sliders */
+        .range-slider {
             -webkit-appearance: none;
             width: 100%;
             height: 6px;
             border-radius: 5px;
-            background: var(--border-color);
+            background: var(--glass-border);
             outline: none;
+            margin-top: 8px;
         }
-        .range-slider-pro::-webkit-slider-thumb {
+        .range-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
+            appearance: none;
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: var(--accent);
+            background: var(--primary-accent);
             cursor: pointer;
-            box-shadow: 0 0 8px var(--accent);
+            box-shadow: 0 0 10px var(--primary-accent);
+            transition: transform 0.1s;
         }
+        .range-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
-        .btn-saas {
-            background: linear-gradient(135deg, var(--accent) 0%, #0284c7 100%);
+        .btn-action-pro {
+            background: linear-gradient(135deg, var(--primary-accent) 0%, #0284c7 100%);
             color: white;
             border: none;
             padding: 14px;
             font-weight: 700;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px var(--accent-glow);
+            border-radius: 14px;
+            box-shadow: 0 8px 24px var(--primary-glow);
+            transition: all 0.3s;
+        }
+        .btn-action-pro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px var(--primary-glow);
+            color: white;
         }
 
-        .badge-pro {
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--accent);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
+        .live-badge-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 18px;
+            padding: 20px;
+            border-left: 5px solid var(--primary-accent);
         }
 
-        .word-box {
-            font-size: 13px;
-            color: var(--success);
-            font-weight: 600;
-            margin-top: 5px;
-            min-height: 20px;
-        }
+        .chart-hold{
+position:relative;
+height:280px;
+width:280px;
+margin:auto;
+background:rgba(255,255,255,.02);
+border:1px solid var(--glass-border);
+border-radius:24px;
+padding:15px;
+}
 
-        .table-wrap {
-            max-height: 300px;
+        .amortization-schedule-box {
+            max-height: 350px;
             overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
         }
 
-        @media print {
-            .btn, .theme-toggle, .nav-pills-saas, .no-print { display: none !important; }
-            body { background: white; color: black; }
+        .table-custom {
+            color: var(--text-main);
+            margin-bottom: 0;
         }
+        .table-custom th {
+            background: rgba(0,0,0,0.2) !important;
+            color: var(--text-muted);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .pro-card { padding: 20px; }
+            body { padding: 10px 5px; }
+        }
+        body::before{
+content:'';
+position:fixed;
+width:700px;
+height:700px;
+background:#38bdf820;
+border-radius:50%;
+filter:blur(180px);
+top:-250px;
+right:-250px;
+z-index:-1;
+}
+
+body::after{
+content:'';
+position:fixed;
+width:600px;
+height:600px;
+background:#8b5cf620;
+border-radius:50%;
+filter:blur(160px);
+bottom:-250px;
+left:-250px;
+z-index:-1;
+}
     </style>
 </head>
 <body>
 
-<div class="saas-container container p-0">
-    <button class="theme-toggle" onclick="toggleSaaSTheme()"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
+<button class="theme-switch" onclick="toggleAppTheme()" title="थीम बदलें">
+    <i id="theme-icon" class="fa-solid fa-moon"></i>
+</button>
+
+<div class="container main-wrapper p-0 position-relative">
     
-    <div class="saas-header text-center">
-        <h2 class="fw-bold mb-1"><i class="fa-solid fa-shield-halved text-info me-2"></i>FinTech SaaS Suite Pro+</h2>
-        <p class="text-muted mb-3">Enterprise-Grade वित्तीय गणना और एडवांस्ड एमुलेशन प्लेटफॉर्म</p>
-        
-        <ul class="nav nav-pills nav-pills-saas justify-content-center" id="saasTabs" role="tablist">
-            <li class="nav-item"><button class="nav-link active" id="tab-si" data-bs-toggle="pill" data-bs-target="#panel-si"><i class="fa-solid fa-scale-balanced me-2"></i>देसी ब्याज + भुगतान लॉग</button></li>
-            <li class="nav-item"><button class="nav-link" id="tab-ci" data-bs-toggle="pill" data-bs-target="#panel-ci"><i class="fa-solid fa-chart-line me-2"></i>चक्रवृद्धि + महंगाई</button></li>
-            <li class="nav-item"><button class="nav-link" id="tab-emi" data-bs-toggle="pill" data-bs-target="#panel-emi"><i class="fa-solid fa-piggy-bank me-2"></i>EMI + प्री-पेमेंट सिम्युलेटर</button></li>
-        </ul>
+    <!-- Top Branding Header -->
+    <div class="app-header">
+        <h1 class="fw-extrabold h3 mb-1"><i class="fa-solid fa-chart-pie text-info me-2"></i>एडवांस प्रो फाइनेंशियल हब</h1>
+        <p class="text-muted small">एक ही स्थान पर सबसे सटीक व्यावहारिक ग्रामीण ब्याज, चक्रवृद्धि गणना, EMI और लोन तुलना अनुसूची</p>
     </div>
 
-    <div class="p-4" id="pdfWorkspace">
-        <div class="tab-content">
-            
-            <div class="tab-pane fade show active" id="panel-si">
-                <div class="row g-4">
-                    <div class="col-lg-6">
-                        <div class="feature-card">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="fw-bold text-primary mb-0">ब्याज और आंशिक भुगतान लॉग</h5>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="si-damdupat" onchange="runSMLogic()">
-                                    <label class="form-check-label small fw-bold text-warning" for="si-damdupat">दाम-दुपट्टा नियम ⚖️</label>
-                                </div>
-                            </div>
+    <div class="p-3 p-md-4">
+        <!-- Modern Rounded Navigation Tabs -->
+        <ul class="nav nav-tabs-custom" id="premiumTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="si-t" data-bs-toggle="pill" data-bs-target="#si-p" type="button"><i class="fa-solid fa-percent me-2"></i>साधारण (देसी/बैंक) ब्याज</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="ci-t" data-bs-toggle="pill" data-bs-target="#ci-p" type="button"><i class="fa-solid fa-cubes me-2"></i>चक्रवृद्धि ब्याज</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="emi-t" data-bs-toggle="pill" data-bs-target="#emi-p" type="button"><i class="fa-solid fa-landmark me-2"></i>एडवांस EMI प्रो</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="comp-t" data-bs-toggle="pill" data-bs-target="#comp-p" type="button"><i class="fa-solid fa-sliders me-2"></i>लोन तुलना मैट्रिक्स</button>
+            </li>
+        </ul>
 
-                            <div class="mb-3">
-                                <label class="form-label d-flex justify-content-between">मूलधन (Principal) <span id="lbl-si-p" class="fw-bold text-info">₹1,00,000</span></label>
-                                <input type="number" id="si-p" class="form-control" value="100000" oninput="syncPro('si-p', 'slide-si-p')">
-                                <input type="range" id="slide-si-p" class="range-slider-pro mt-2" min="5000" max="2000000" step="5000" value="100000" oninput="syncProIn('si-p', 'slide-si-p'); runSMLogic();">
-                                <div id="si-p-words" class="word-box"></div>
-                            </div>
+        <!-- Main Workspace (Target Area for PDF) -->
+        <div id="captureWorkspace">
+            <div class="tab-content" id="premiumTabsContent">
+                
+                <!-- 1. ADVANCED SIMPLE INTEREST PANEL -->
+                <div class="tab-pane fade show active" id="si-p" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="pro-card">
+                                <h5 class="fw-bold mb-4 text-info"><i class="fa-solid fa-calculator me-2"></i>पैरामीटर्स इनपुट</h5>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">मूलधन (Principal Amount) <span id="si-p-val" class="text-info fw-bold">₹50,000</span></label>
+                                    <input type="number" id="si-principal" class="form-control" value="50000" oninput="syncSlider('si-principal', 'si-p-slide')">
+                                    <input type="range" id="si-p-slide" class="range-slider" min="1000" max="5000000" step="1000" value="50000" oninput="syncInput('si-principal', 'si-p-slide'); calcSI();">
+                                </div>
 
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">दर (Rate %)</label>
-                                    <input type="number" id="si-r" class="form-control" value="2" step="0.1" oninput="runSMLogic()">
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">प्रकार</label>
-                                    <select id="si-t" class="form-select" onchange="runSMLogic()">
-                                        <option value="monthly" selected>मासिक (₹ सैकड़ा)</option>
-                                        <option value="yearly">सालाना (बैंक)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">प्रारंभ तिथि</label>
-                                    <input type="date" id="si-sd" class="form-control" onchange="runSMLogic()">
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">अंत तिथि</label>
-                                    <input type="date" id="si-ed" class="form-control" onchange="runSMLogic()">
-                                </div>
-                            </div>
-
-                            <div class="mt-3 no-print">
-                                <h6 class="fw-bold text-muted mb-2"><i class="fa-solid fa-plus me-1"></i>आंशिक भुगतान जोड़ें (Partial Pay)</h6>
-                                <div class="row g-2">
-                                    <div class="col-6"><input type="number" id="part-amt" class="form-control form-control-sm" placeholder="₹ रकम"></div>
-                                    <div class="col-6"><input type="date" id="part-date" class="form-control form-control-sm"></div>
-                                </div>
-                                <button class="btn btn-sm btn-outline-info w-100 mt-2" onclick="addPartialPay()">लॉग में दर्ज करें</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="feature-card d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="fw-bold text-success mb-3">लाइव ऑडिट रिपोर्ट</h5>
-                                <div class="bg-black bg-opacity-20 p-3 rounded-4 mb-3">
-                                    <p class="mb-1 text-muted small">सटीक समय अवधि: <b id="res-si-time" class="text-primary">-</b></p>
-                                    <p class="mb-1 text-muted small">मूलधन: <b>₹<span id="res-si-p">0</span></b></p>
-                                    <p class="mb-1 text-muted small">कुल आंशिक कटौती: <b class="text-info">₹<span id="res-si-part">0</span></b></p>
-                                    <p class="mb-1 text-muted small">अर्जित शुद्ध ब्याज: <b class="text-danger">₹<span id="res-si-i">0</span></b> <span id="damdupat-status" class="badge bg-warning text-dark d-none">दाम-दुपट्टा लॉक्ड</span></p>
-                                    <hr class="my-2 opacity-25">
-                                    <h4 class="mb-0 text-success">अंतिम देय राशि: <b>₹<span id="res-si-total">0</span></b></h4>
-                                    <div id="si-total-words" class="word-box text-white-50 small"></div>
-                                </div>
-                            </div>
-                            <div class="table-wrap mb-2">
-                                <table class="table table-dark table-sm table-hover text-center m-0">
-                                    <thead><tr class="table-secondary"><th>तारीख</th><th>विवरण</th><th>राशि</th></tr></thead>
-                                    <tbody id="siLogTable"><tr><td colspan="3" class="text-muted small py-2">कोई आंशिक भुगतान प्रविष्टि नहीं है</td></tr></tbody>
-                                </table>
-                            </div>
-                            <div style="height: 180px;"><canvas id="chartSI"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="panel-ci">
-                <div class="row g-4">
-                    <div class="col-lg-6">
-                        <div class="feature-card">
-                            <h5 class="fw-bold text-primary mb-4">वेल्थ गेन + महंगाई कैलकुलेटर</h5>
-                            <div class="mb-3">
-                                <label class="form-label d-flex justify-content-between">मूलधन निवेश <span id="lbl-ci-p" class="fw-bold text-info">₹1,00,000</span></label>
-                                <input type="number" id="ci-p" class="form-control" value="100000" oninput="syncPro('ci-p', 'slide-ci-p')">
-                                <input type="range" id="slide-ci-p" class="range-slider-pro mt-2" min="5000" max="10000000" step="5000" value="100000" oninput="syncProIn('ci-p', 'slide-ci-p'); runCILogic();">
-                            </div>
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">अनुमानित रिटर्न (%)</label>
-                                    <input type="number" id="ci-r" class="form-control" value="12" oninput="runCILogic()">
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">समय (वर्ष)</label>
-                                    <input type="number" id="ci-t" class="form-control" value="10" oninput="runCILogic()">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">महंगाई दर (Inflation Rate %)</label>
-                                <input type="number" id="ci-inf" class="form-control" value="6" oninput="runCILogic()">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="feature-card d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="fw-bold text-success mb-3">वास्तविक क्रय शक्ति रिपोर्ट</h5>
-                                <div class="bg-black bg-opacity-20 p-3 rounded-4 mb-3">
-                                    <p class="mb-1 text-muted small">भविष्य की सामान्य वैल्यू: <b class="text-primary">₹<span id="res-ci-normal">0</span></b></p>
-                                    <p class="mb-1 text-muted small">महंगाई प्रभाव कटौती: <b class="text-danger">₹<span id="res-ci-loss">0</span></b></p>
-                                    <hr class="my-2 opacity-25">
-                                    <h4 class="mb-0 text-success">वास्तविक वैल्यू (Actual Power): <b>₹<span id="res-ci-real">0</span></b></h4>
-                                </div>
-                            </div>
-                            <div style="height: 200px;"><canvas id="chartCI"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="panel-emi">
-                <div class="row g-4">
-                    <div class="col-lg-6">
-                        <div class="feature-card">
-                            <h5 class="fw-bold text-primary mb-4">होम/कार लोन प्री-पेमेंट सिम्युलेटर</h5>
-                            <div class="mb-3">
-                                <label class="form-label d-flex justify-content-between">लोन राशि <span id="lbl-emi-p" class="fw-bold text-info">₹20,000,000</span></label>
-                                <input type="number" id="emi-p" class="form-control" value="2000000" oninput="syncPro('emi-p', 'slide-emi-p')">
-                                <input type="range" id="slide-emi-p" class="range-slider-pro mt-2" min="100000" max="50000000" step="100000" value="2000000" oninput="syncProIn('emi-p', 'slide-emi-p'); runEMILogic();">
-                            </div>
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">ब्याज दर (Annual %)</label>
-                                    <input type="number" id="emi-r" class="form-control" value="8.5" step="0.05" oninput="runEMILogic()">
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">अवधि (वर्ष)</label>
-                                    <input type="number" id="emi-t" class="form-control" value="20" oninput="runEMILogic()">
-                                </div>
-                            </div>
-                            <div class="p-3 bg-black bg-opacity-20 rounded-4">
-                                <h6 class="fw-bold text-warning mb-2"><i class="fa-solid fa-bolt me-1"></i>प्री-पेमेंट एमुलेटर (Extra Payload)</h6>
                                 <div class="row">
-                                    <div class="col-12">
-                                        <label class="form-label">अतिरिक्त भुगतान (प्रति माह जोड़ें)</label>
-                                        <input type="number" id="emi-extra" class="form-control" value="5000" oninput="runEMILogic()">
+                                    <div class="col-md-7 mb-3">
+                                        <label class="form-label">ब्याज दर (Rate %) <span id="si-r-val" class="text-info fw-bold">2.00%</span></label>
+                                        <input type="number" id="si-rate" step="0.01" class="form-control" value="2" oninput="syncSlider('si-rate', 'si-r-slide')">
+                                        <input type="range" id="si-r-slide" class="range-slider" min="0.1" max="50" step="0.05" value="2" oninput="syncInput('si-rate', 'si-r-slide'); calcSI();">
+                                    </div>
+                                    <div class="col-md-5 mb-3">
+                                        <label class="form-label">दर का प्रकार</label>
+                                        <select id="si-type" class="form-select" onchange="calcSI()">
+                                            <option value="monthly" selected>मासिक (₹ सैकड़ा)</option>
+                                            <option value="yearly">सालाना (बैंक विधि)</option>
+                                        </select>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">शुरुआत तारीख</label>
+                                        <input type="date" id="si-sdate" class="form-control" onchange="calcSI()">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">अंतिम/आज तारीख</label>
+                                        <input type="date" id="si-edate" class="form-control" onchange="calcSI()">
+                                    </div>
+                                </div>
+                                <button class="btn btn-action-pro w-100 mt-2" onclick="calcSI()"><i class="fa-solid fa-rotate me-2"></i>हिसाब अपडेट करें</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="feature-card d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="fw-bold text-success mb-3">बचत और ऑप्टिमाइजेशन मैट्रिक्स</h5>
-                                <div class="bg-black bg-opacity-20 p-3 rounded-4 mb-2">
-                                    <p class="mb-1 text-muted small">सामान्य मासिक EMI: <b>₹<span id="res-emi-val">0</span></b></p>
-                                    <p class="mb-1 text-success small fw-bold">बचे हुए कुल वर्ष: <span id="res-emi-saved-time">0</span> वर्ष पहले लोन क्लोज होगा!</p>
-                                    <p class="mb-1 text-muted small">कुल ब्याज बचत: <b class="text-success">₹<span id="res-emi-saved-money">0</span></b></p>
+
+                        <div class="col-lg-6">
+                            <div class="pro-card d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-receipt me-2"></i>एनालिटिक्स रिपोर्ट</h5>
+                                    <div class="live-badge-box mb-3">
+                                        <p class="mb-1 text-muted small">सटीक समय अवधि:</p>
+                                        <h6 class="fw-bold text-primary mb-0" id="si-res-duration">0 वर्ष 0 माह 0 दिन</h6>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
+                                        <span class="text-muted">मूल राशि:</span>
+                                        <span class="fw-bold">₹<span id="si-res-p">50,000</span></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
+                                        <span class="text-muted">अर्जित कुल ब्याज:</span>
+                                        <span class="fw-bold text-danger">₹<span id="si-res-i">0</span></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-3">
+                                        <span class="fw-bold">कुल देय मिश्रधन:</span>
+                                        <span class="fw-bold text-success h5 mb-0">₹<span id="si-res-total">0</span></span>
+                                    </div>
+                                </div>
+                                <div class="chart-hold mt-2">
+                                    <canvas id="chartSI"></canvas>
                                 </div>
                             </div>
-                            <div style="height: 200px;"><canvas id="chartEMI"></canvas></div>
                         </div>
                     </div>
                 </div>
+
+                <!-- 2. ADVANCED COMPOUND INTEREST PANEL -->
+                <div class="tab-pane fade" id="ci-p" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="pro-card">
+                                <h5 class="fw-bold mb-4 text-info"><i class="fa-solid fa-chart-line me-2"></i>चक्रवृद्धि पैरामीटर्स</h5>
+                                <div class="mb-3">
+                                    <label class="form-label">मूलधन राशि (Principal)</label>
+                                    <input type="number" id="ci-principal" class="form-control" value="100000" oninput="syncSlider('ci-principal', 'ci-p-slide')">
+                                    <input type="range" id="ci-p-slide" class="range-slider" min="5000" max="10000000" step="5000" value="100000" oninput="syncInput('ci-principal', 'ci-p-slide'); calcCI();">
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">वार्षिक दर (%)</label>
+                                        <input type="number" id="ci-rate" class="form-control" value="10" oninput="syncSlider('ci-rate', 'ci-r-slide')">
+                                        <input type="range" id="ci-r-slide" class="range-slider" min="1" max="30" step="0.25" value="10" oninput="syncInput('ci-rate', 'ci-r-slide'); calcCI();">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">समय (अवधि वर्ष)</label>
+                                        <input type="number" id="ci-time" class="form-control" value="5" oninput="syncSlider('ci-time', 'ci-t-slide')">
+                                        <input type="range" id="ci-t-slide" class="range-slider" min="1" max="40" step="1" value="5" oninput="syncInput('ci-time', 'ci-t-slide'); calcCI();">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">कंपाउंडिंग चक्र (Frequency)</label>
+                                    <select id="ci-freq" class="form-select" onchange="calcCI()">
+                                        <option value="1">वार्षिक (Yearly)</option>
+                                        <option value="2">अर्धवार्षिक (Half-Yearly)</option>
+                                        <option value="4" selected>त्रैमासिक (Quarterly)</option>
+                                        <option value="12">मासिक (Monthly)</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-action-pro w-100" onclick="calcCI()">हिसाब करें</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="pro-card d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-coins me-2"></i>ग्रोथ रिपोर्ट</h5>
+                                    <div class="result-box bg-black bg-opacity-25 p-3 rounded-4 mb-3">
+                                        <p class="mb-1 text-muted">निवेशित मूलधन: <b>₹<span id="ci-res-p">0</span></b></p>
+                                        <p class="mb-1 text-muted">कुल वेल्थ गेन (ब्याज): <b class="text-danger">₹<span id="ci-res-i">0</span></b></p>
+                                        <hr class="my-2 opacity-25">
+                                        <h5 class="mb-0 text-success">मैच्योरिटी वैल्यू: <b>₹<span id="ci-res-total">0</span></b></h5>
+                                    </div>
+                                </div>
+                                <div class="chart-hold">
+                                    <canvas id="chartCI"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. ADVANCED EMI PANEL WITH MORATORIUM & FEES -->
+                <div class="tab-pane fade" id="emi-p" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="pro-card">
+                                <h5 class="fw-bold mb-4 text-info"><i class="fa-solid fa-house-laptop me-2"></i>लोन एवं ईएमआई इनपुट</h5>
+                                <div class="mb-3">
+                                    <label class="form-label">लोन राशि (Loan Amount)</label>
+                                    <input type="number" id="emi-amount" class="form-control" value="1000000" oninput="syncSlider('emi-amount', 'emi-a-slide')">
+                                    <input type="range" id="emi-a-slide" class="range-slider" min="50000" max="50000000" step="50000" value="1000000" oninput="syncInput('emi-amount', 'emi-a-slide'); calcPremiumEMI();">
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">ब्याज दर (Annual %)</label>
+                                        <input type="number" id="emi-rate" step="0.05" class="form-control" value="8.5" oninput="syncSlider('emi-rate', 'emi-r-slide')">
+                                        <input type="range" id="emi-r-slide" class="range-slider" min="3" max="25" step="0.05" value="8.5" oninput="syncInput('emi-rate', 'emi-r-slide'); calcPremiumEMI();">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">अवधि (वर्षों में)</label>
+                                        <input type="number" id="emi-tenure" class="form-control" value="15" oninput="syncSlider('emi-tenure', 'emi-t-slide')">
+                                        <input type="range" id="emi-t-slide" class="range-slider" min="1" max="30" step="1" value="15" oninput="syncInput('emi-tenure', 'emi-t-slide'); calcPremiumEMI();">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">मोरेटोरियम (महीने)</label>
+                                        <input type="number" id="emi-moratorium" class="form-control" value="0" min="0" max="24" oninput="calcPremiumEMI()">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">प्रोसेसिंग फीस (%)</label>
+                                        <input type="number" id="emi-fee" step="0.1" class="form-control" value="1" min="0" max="5" oninput="calcPremiumEMI()">
+                                    </div>
+                                </div>
+                                <button class="btn btn-action-pro w-100" onclick="calcPremiumEMI()">कैलकुलेट EMI</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="pro-card d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-calculator me-2"></i>EMI ब्रेकअप</h5>
+                                    <div class="result-box bg-black bg-opacity-25 p-3 rounded-4 mb-2">
+                                        <h4 class="text-primary mb-2">मासिक EMI: <b>₹<span id="emi-res-val">0</span></b></h4>
+                                        <p class="mb-1 small text-muted">अपफ्रंट प्रोसेसिंग फीस (लोन आरंभ पर): <b>₹<span id="emi-res-fee">0</span></b></p>
+                                        <p class="mb-1 small text-muted">कुल देय ब्याज: <b class="text-danger">₹<span id="emi-res-i">0</span></b></p>
+                                        <h6 class="mb-0 mt-2 text-success">कुल देय भुगतान: <b>₹<span id="emi-res-total">0</span></b></h6>
+                                    </div>
+                                </div>
+                                <div class="chart-hold">
+                                    <canvas id="chartEMI"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Amortization Schedule Table -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="pro-card">
+                                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-table-list me-2"></i>लोन अमोर्टीजेशन पुनर्भुगतान अनुसूची (Amortization Schedule)</h6>
+                                <div class="amortization-schedule-box">
+                                    <table class="table table-custom table-hover text-center align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>माह (Month)</th>
+                                                <th>शुरुआती राशि</th>
+                                                <th>मासिक EMI</th>
+                                                <th>मूलधन हिस्सा</th>
+                                                <th>ब्याज हिस्सा</th>
+                                                <th>शेष लोन राशि</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="emiTableBody">
+                                            <!-- Dynamic Rows JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. LOAN COMPARISON MATRIX -->
+                <div class="tab-pane fade" id="comp-p" role="tabpanel">
+                    <div class="pro-card">
+                        <h5 class="fw-bold mb-4 text-info"><i class="fa-solid fa-table-columns me-2"></i>लोन तुलना मैट्रिक्स (Side-by-Side Comparison)</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-custom text-center align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>पैरामीटर</th>
+                                        <th style="width: 35%;">लोन विकल्प A (Loan Alpha)</th>
+                                        <th style="width: 35%;">लोन विकल्प B (Loan Beta)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b>लोन राशि (Principal)</b></td>
+                                        <td><input type="number" id="c-p1" class="form-control text-center" value="2000000" oninput="runComparisonMatrix()"></td>
+                                        <td><input type="number" id="c-p2" class="form-control text-center" value="2000000" oninput="runComparisonMatrix()"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>ब्याज दर (Annual %)</b></td>
+                                        <td><input type="number" id="c-r1" step="0.05" class="form-control text-center" value="8.5" oninput="runComparisonMatrix()"></td>
+                                        <td><input type="number" id="c-r2" step="0.05" class="form-control text-center" value="9.2" oninput="runComparisonMatrix()"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>अवधि (वर्षों में)</b></td>
+                                        <td><input type="number" id="c-t1" class="form-control text-center" value="20" oninput="runComparisonMatrix()"></td>
+                                        <td><input type="number" id="c-t2" class="form-control text-center" value="15" oninput="runComparisonMatrix()"></td>
+                                    </tr>
+                                    <tr class="bg-black bg-opacity-20">
+                                        <td><b>मासिक EMI</b></td>
+                                        <td><span id="c-emi1" class="fw-bold text-primary">₹0</span></td>
+                                        <td><span id="c-emi2" class="fw-bold text-primary">₹0</span></td>
+                                    </tr>
+                                    <tr class="bg-black bg-opacity-20">
+                                        <td><b>कुल देय ब्याज</b></td>
+                                        <td><span id="c-i1" class="fw-bold text-danger">₹0</span></td>
+                                        <td><span id="c-i2" class="fw-bold text-danger">₹0</span></td>
+                                    </tr>
+                                    <tr class="bg-black bg-opacity-20">
+                                        <td><b>कुल देय भुगतान</b></td>
+                                        <td><span id="c-total1" class="fw-bold text-success">₹0</span></td>
+                                        <td><span id="c-total2" class="fw-bold text-success">₹0</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+        </div> <!-- End captureWorkspace -->
 
+        <!-- Shared Action Utilities -->
+        <div class="row g-3 mt-4 btn-row">
+            <div class="col-md-4">
+                <button class="btn btn-success w-100 p-3 text-white fw-bold shadow-sm" onclick="shareProWhatsApp()">
+                    <i class="fa-brands fa-whatsapp me-2 fs-5"></i>WhatsApp शेयर रिपोर्ट
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-danger w-100 p-3 text-white fw-bold shadow-sm" onclick="exportProPDF()">
+                    <i class="fa-solid fa-file-pdf me-2 fs-5"></i>इंस्टेंट PDF डाउनलोड
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-outline-secondary w-100 p-3 fw-bold shadow-sm" onclick="window.print()">
+                    <i class="fa-solid fa-print me-2 fs-5"></i>प्रिंट रिपोर्ट लें
+                </button>
+            </div>
         </div>
 
-        <div class="row g-3 mt-4 no-print">
-            <div class="col-md-4"><button class="btn btn-success w-100 p-3 fw-bold" onclick="shareSaaSHub()"><i class="fa-brands fa-whatsapp me-2 fs-5"></i>यूनीक शेयरेबल लिंक (WhatsApp)</button></div>
-            <div class="col-md-4"><button class="btn btn-danger w-100 p-3 fw-bold" onclick="exportSaaSPDF()"><i class="fa-solid fa-file-pdf me-2 fs-5"></i>एडवांस्ड PDF रिपोर्ट</button></div>
-            <div class="col-md-4"><button class="btn btn-outline-secondary w-100 p-3 fw-bold" onclick="window.print()"><i class="fa-solid fa-print me-2 fs-5"></i>आधिकारिक प्रिंट</button></div>
+        <!-- History/Log Node -->
+        <div class="mt-4">
+            <div class="pro-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0 text-muted"><i class="fa-solid fa-clock-rotate-left me-2"></i>लोकल क्लाउड हिस्ट्री लॉग (LocalStorage Auto-Save)</h6>
+                    <button class="btn btn-sm btn-link text-danger text-decoration-none p-0" onclick="clearProHistory()">क्लियर लॉग</button>
+                </div>
+                <div id="proHistoryBox" class="row g-2" style="max-height: 180px; overflow-y: auto;">
+                    <!-- Auto Injected History Loops -->
+                </div>
+            </div>
         </div>
+
     </div>
 
-    <div class="text-center py-3 bg-black bg-opacity-30 text-muted small">
-        Powered by <a href="https://e-gyansetu.com" target="_blank" class="text-info text-decoration-none fw-bold">E-Gyan Setu FinTech Cloud</a>
+    <!-- Professional Fineprint Footer -->
+    <div class="text-center py-3 bg-black bg-opacity-30 text-muted small" style="border-top: 1px solid var(--glass-border);">
+        Designed & Hosted by <a href="https://e-gyansetu.com" target="_blank" class="text-info text-decoration-none fw-bold">E-Gyan Setu</a> | Secure PWA Utility v2.5
     </div>
 </div>
 
 <script>
-    let globalChart = null;
-    let partialPaymentsLog = [];
+    let activeChart = null;
 
-    // Initialize Default Dates
-    document.getElementById('si-sd').valueAsDate = new Date(new Date().setMonth(new Date().getMonth() - 12));
-    document.getElementById('si-ed').valueAsDate = new Date();
+    // Default Initialization Dates
+    document.getElementById('si-sdate').valueAsDate = new Date(new Date().setMonth(new Date().getMonth() - 12));
+    document.getElementById('si-edate').valueAsDate = new Date();
 
-    function syncPro(inId, sId) { document.getElementById(sId).value = document.getElementById(inId).value; }
-    function syncProIn(inId, sId) { document.getElementById(inId).value = document.getElementById(sId).value; }
-
-    // Numbers to Words Converter (Hindi Engine)
-    function numToHindiWords(num) {
-        if (num === 0) return 'शून्य मात्र';
-        const jewels = ["", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात", "आठ", "नौ", "दस", "ग्यारह", "बारह", "तेरह", "चौदह", "पंद्रह", "सोलह", "सत्रह", "अठारह", "उन्नीस"];
-        const tens = ["", "", "बीस", "तीस", "चालीस", "पचास", "साठ", "सत्तर", "अस्सी", "नब्बे"];
-        
-        function convertLessThanOneHundred(n) {
-            if (n < 20) return jewels[n];
-            return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + jewels[n % 10] : "");
-        }
-
-        let words = "";
-        num = Math.floor(num);
-        
-        if (Math.floor(num / 10000000) > 0) {
-            words += convertLessThanOneHundred(Math.floor(num / 10000000)) + " करोड़ ";
-            num %= 10000000;
-        }
-        if (Math.floor(num / 100000) > 0) {
-            words += convertLessThanOneHundred(Math.floor(num / 100000)) + " लाख ";
-            num %= 100000;
-        }
-        if (Math.floor(num / 1000) > 0) {
-            words += convertLessThanOneHundred(Math.floor(num / 1000)) + " हजार ";
-            num %= 1000;
-        }
-        if (Math.floor(num / 100) > 0) {
-            words += convertLessThanOneHundred(Math.floor(num / 100)) + " सौ ";
-            num %= 100;
-        }
-        if (num > 0) {
-            words += convertLessThanOneHundred(num);
-        }
-        return words.trim() + " रुपये मात्र";
+    // Sync input ranges and sliders
+    function syncInput(inputId, sliderId) {
+        document.getElementById(inputId).value = document.getElementById(sliderId).value;
+    }
+    function syncSlider(inputId, sliderId) {
+        document.getElementById(sliderId).value = document.getElementById(inputId).value;
     }
 
-    // Chart Management System
-    function updateSaaSChart(canvasId, labels, data, colors) {
-        if(globalChart) globalChart.destroy();
+    // Theme Toggle Functionality
+    function toggleAppTheme() {
+        const body = document.body;
+        const icon = document.getElementById('theme-icon');
+        if (body.getAttribute('data-theme') === 'light') {
+            body.removeAttribute('data-theme');
+            icon.className = 'fa-solid fa-moon';
+            localStorage.setItem('pro_theme', 'dark');
+        } else {
+            body.setAttribute('data-theme', 'light');
+            icon.className = 'fa-solid fa-sun';
+            localStorage.setItem('pro_theme', 'light');
+        }
+        // Refresh chart if exists to apply new color matrix
+        const activeTab = document.querySelector('#premiumTabs .nav-link.active').id;
+        if(activeTab === 'si-t') calcSI();
+        else if(activeTab === 'ci-t') calcCI();
+        else if(activeTab === 'emi-t') calcPremiumEMI();
+    }
+    if(localStorage.getItem('pro_theme') === 'light') {
+        document.body.setAttribute('data-theme', 'light');
+        document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+    }
+
+    // Chart Renderer Utility
+    function renderDynamicChart(canvasId, label1, val1, label2, val2) {
+        if(activeChart) { activeChart.destroy(); }
         const ctx = document.getElementById(canvasId).getContext('2d');
         const isLight = document.body.getAttribute('data-theme') === 'light';
-        
-        globalChart = new Chart(ctx, {
+        const txtColor = isLight ? '#0f172a' : '#f8fafc';
+
+        activeChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: labels,
-                datasets: [{ data: data, backgroundColor: colors, borderWidth: 0 }]
+                labels: [label1, label2],
+                datasets: [{
+                    data: [val1, val2],
+                    backgroundColor: ['#38bdf8', '#f87171'],
+                    borderColor: isLight ? '#ffffff' : '#1e293b',
+                    borderWidth: 2
+                }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: isLight ? '#0f172a' : '#f8fafc', font: { weight: '600' } } } },
-                cutout: '75%'
+                plugins: {
+                    legend: { labels: { color: txtColor, font: { family: 'Plus Jakarta Sans', weight: '600' } } }
+                },
+                cutout: '70%'
             }
         });
     }
 
-    // Theme Engine
-    function toggleSaaSTheme() {
-        const body = document.body;
-        const icon = document.getElementById('theme-icon');
-        if(body.getAttribute('data-theme') === 'light') {
-            body.removeAttribute('data-theme');
-            icon.className = 'fa-solid fa-moon';
-        } else {
-            body.setAttribute('data-theme', 'light');
-            icon.className = 'fa-solid fa-sun';
-        }
-        refreshActiveTabCalculations();
+    // History Functions
+    function pushToHistory(calcType, msg) {
+        let items = JSON.parse(localStorage.getItem('pro_hist')) || [];
+        items.unshift({ type: calcType, log: msg, date: new Date().toLocaleTimeString('hi-IN') });
+        if(items.length > 6) items.pop();
+        localStorage.setItem('pro_hist', JSON.stringify(items));
+        renderHistory();
     }
 
-    // 1. ADVANCED DECI INTEREST ENGINE
-    function addPartialPay() {
-        const amt = parseFloat(document.getElementById('part-amt').value);
-        const date = document.getElementById('part-date').value;
-        if(!amt || !date) return alert("सही राशि और तारीख भरें");
-        
-        partialPaymentsLog.push({ date, amt });
-        document.getElementById('part-amt').value = "";
-        renderPartialTable();
-        runSMLogic();
-    }
-
-    function renderPartialTable() {
-        const tbody = document.getElementById('siLogTable');
-        if(partialPaymentsLog.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3" class="text-muted small py-2">कोई आंशिक भुगतान प्रविष्टि नहीं है</td></tr>`;
+    function renderHistory() {
+        let items = JSON.parse(localStorage.getItem('pro_hist')) || [];
+        const box = document.getElementById('proHistoryBox');
+        if(items.length === 0) {
+            box.innerHTML = `<p class="text-muted text-center small my-2">कोई इतिहास संग्रहीत नहीं है।</p>`;
             return;
         }
-        tbody.innerHTML = partialPaymentsLog.map((p, idx) => `
-            <tr>
-                <td>${p.date}</td>
-                <td>आंशिक रिफंड भुगतान</td>
-                <td class="text-success">₹${p.amt.toLocaleString('en-IN')} <i class="fa-solid fa-circle-xmark text-danger ms-2" style="cursor:pointer;" onclick="removePartialPay(${idx})"></i></td>
-            </tr>
+        box.innerHTML = items.map(i => `
+            <div class="col-md-6">
+                <div class="p-2 rounded bg-black bg-opacity-20 border border-secondary-subtle d-flex justify-content-between text-start small">
+                    <span><b class="text-info">[${i.type}]</b> ${i.log}</span>
+                    <span class="text-muted ms-2">${i.date}</span>
+                </div>
+            </div>
         `).join('');
     }
+    function clearProHistory() { localStorage.removeItem('pro_hist'); renderHistory(); }
 
-    function removePartialPay(idx) {
-        partialPaymentsLog.splice(idx, 1);
-        renderPartialTable();
-        runSMLogic();
-    }
+    // 1. ADVANCED SIMPLE INTEREST CALCULATION (VILLAGE EXTRA PRECISION)
+    function calcSI() {
+        const p = parseFloat(document.getElementById('si-principal').value) || 0;
+        const r = parseFloat(document.getElementById('si-rate').value) || 0;
+        const type = document.getElementById('si-type').value;
+        const sVal = document.getElementById('si-sdate').value;
+        const eVal = document.getElementById('si-edate').value;
 
-    function runSMLogic() {
-        const p = parseFloat(document.getElementById('si-p').value) || 0;
-        const r = parseFloat(document.getElementById('si-r').value) || 0;
-        const type = document.getElementById('si-t').value;
-        const sd = document.getElementById('si-sd').value;
-        const ed = document.getElementById('si-ed').value;
-        const useDamdupat = document.getElementById('si-damdupat').checked;
+        document.getElementById('si-p-val').innerText = "₹" + p.toLocaleString('en-IN');
+        document.getElementById('si-r-val').innerText = r.toFixed(2) + "%";
 
-        document.getElementById('lbl-si-p').innerText = "₹" + p.toLocaleString('en-IN');
-        document.getElementById('si-p-words').innerText = numToHindiWords(p);
+        if(!sVal || !eVal) return;
+        const d1 = new Date(sVal); const d2 = new Date(eVal);
+        if(d2 < d1) return;
 
-        if(!sd || !ed) return;
-        const d1 = new Date(sd); const d2 = new Date(ed);
-        const days = Math.ceil(Math.abs(d2 - d1) / (1000*60*60*24)) || 0;
+        const diffTime = Math.abs(d2 - d1);
+        const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        let y = Math.floor(days / 365); let rem = days % 365;
-        let m = Math.floor(rem / 30); let d = rem % 30;
-        document.getElementById('res-si-time').innerText = `${y} वर्ष ${m} माह ${d} दिन (कुल ${days} दिन)`;
+        let y = Math.floor(totalDays / 365);
+        let rem = totalDays % 365;
+        let m = Math.floor(rem / 30);
+        let d = rem % 30;
 
-        let totalPartiallyPaid = partialPaymentsLog.reduce((acc, curr) => acc + curr.amt, 0);
-        let netPrincipal = p - totalPartiallyPaid;
-        if(netPrincipal < 0) netPrincipal = 0;
+        document.getElementById('si-res-duration').innerText = `${y} वर्ष ${m} माह ${d} दिन (कुल ${totalDays} दिन)`;
 
         let interest = 0;
         if(type === "monthly") {
-            interest = (netPrincipal * r * (days / 30)) / 100;
+            const effectiveMonths = totalDays / 30;
+            interest = (p * r * effectiveMonths) / 100;
         } else {
-            interest = (netPrincipal * r * (days / 365)) / 100;
+            const effectiveYears = totalDays / 365;
+            interest = (p * r * effectiveYears) / 100;
+        }
+        const total = p + interest;
+
+        document.getElementById('si-res-p').innerText = p.toLocaleString('en-IN');
+        document.getElementById('si-res-i').innerText = Math.round(interest).toLocaleString('en-IN');
+        document.getElementById('si-res-total').innerText = Math.round(total).toLocaleString('en-IN');
+
+        renderDynamicChart('chartSI', 'मूलधन राशि', p, 'कुल अर्जित ब्याज', interest);
+    }
+
+    // 2. ADVANCED COMPOUND INTEREST
+    function calcCI() {
+        const p = parseFloat(document.getElementById('ci-principal').value) || 0;
+        const r = (parseFloat(document.getElementById('ci-rate').value) || 0) / 100;
+        const t = parseFloat(document.getElementById('ci-time').value) || 0;
+        const n = parseInt(document.getElementById('ci-freq').value) || 1;
+
+        const total = p * Math.pow((1 + (r / n)), (n * t));
+        const interest = total - p;
+
+        document.getElementById('ci-res-p').innerText = p.toLocaleString('en-IN');
+        document.getElementById('ci-res-i').innerText = Math.round(interest).toLocaleString('en-IN');
+        document.getElementById('ci-res-total').innerText = Math.round(total).toLocaleString('en-IN');
+
+        renderDynamicChart('chartCI', 'मूलधन निवेश', p, 'कंपाउंड वेल्थ', interest);
+    }
+
+    // 3. PREMIUM EMI CALCULATOR WITH MORATORIUM AND SCHEDULING
+    function calcPremiumEMI() {
+        const p = parseFloat(document.getElementById('emi-amount').value) || 0;
+        const annualRate = parseFloat(document.getElementById('emi-rate').value) || 0;
+        const years = parseFloat(document.getElementById('emi-tenure').value) || 0;
+        const morMonths = parseInt(document.getElementById('emi-moratorium').value) || 0;
+        const feePercent = parseFloat(document.getElementById('emi-fee').value) || 0;
+
+        const processingFee = (p * feePercent) / 100;
+        let totalMonths = years * 12;
+
+        let monthlyRate = (annualRate / 12) / 100;
+        
+        // Moratorium calculation adjustment if present
+        let adjustedPrincipal = p;
+        if (morMonths > 0) {
+            adjustedPrincipal = p * Math.pow((1 + monthlyRate), morMonths);
         }
 
-        // दाम-दुपट्टा कैपिंग लॉजिक
-        if(useDamdupat && interest > netPrincipal) {
-            interest = netPrincipal;
-            document.getElementById('damdupat-status').classList.remove('d-none');
-        } else {
-            document.getElementById('damdupat-status').classList.add('d-none');
+        let emi = (adjustedPrincipal * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+        if(isNaN(emi)) emi = 0;
+
+        let totalPayment = emi * totalMonths;
+        let totalInterest = totalPayment - p;
+
+        document.getElementById('emi-res-val').innerText = Math.round(emi).toLocaleString('en-IN');
+        document.getElementById('emi-res-fee').innerText = Math.round(processingFee).toLocaleString('en-IN');
+        document.getElementById('emi-res-i').innerText = Math.round(totalInterest).toLocaleString('en-IN');
+        document.getElementById('emi-res-total').innerText = Math.round(totalPayment + processingFee).toLocaleString('en-IN');
+
+        renderDynamicChart('chartEMI', 'मूल लोन राशि', p, 'कुल ब्याज भार', totalInterest);
+
+        // Generate Amortization Schedule Data Rows
+        const tbody = document.getElementById('emiTableBody');
+        tbody.innerHTML = "";
+        let runningBalance = adjustedPrincipal;
+
+        for (let i = 1; i <= totalMonths; i++) {
+            let interestComponent = runningBalance * monthlyRate;
+            let principalComponent = emi - interestComponent;
+            runningBalance -= principalComponent;
+            if(runningBalance < 0) runningBalance = 0;
+
+            if (i <= 12 || i % 12 === 0 || i === totalMonths) { // optimizing DOM rows rendering
+                let row = `<tr>
+                    <td>महीना ${i}</td>
+                    <td>₹${Math.round(runningBalance + principalComponent).toLocaleString('en-IN')}</td>
+                    <td>₹${Math.round(emi).toLocaleString('en-IN')}</td>
+                    <td>₹${Math.round(principalComponent).toLocaleString('en-IN')}</td>
+                    <td>₹${Math.round(interestComponent).toLocaleString('en-IN')}</td>
+                    <td>₹${Math.round(runningBalance).toLocaleString('en-IN')}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            }
         }
-
-        let finalTotal = netPrincipal + interest;
-
-        document.getElementById('res-si-p').innerText = p.toLocaleString('en-IN');
-        document.getElementById('res-si-part').innerText = totalPartiallyPaid.toLocaleString('en-IN');
-        document.getElementById('res-si-i').innerText = Math.round(interest).toLocaleString('en-IN');
-        document.getElementById('res-si-total').innerText = Math.round(finalTotal).toLocaleString('en-IN');
-        document.getElementById('si-total-words').innerText = numToHindiWords(finalTotal);
-
-        updateSaaSChart('chartSI', ['शुद्ध मूलधन', 'कुल ब्याज'], [netPrincipal, interest], ['#38bdf8', '#f87171']);
     }
 
-    // 2. ADVANCED CI WITH INFLATION IMPLICATION
-    function runCILogic() {
-        const p = parseFloat(document.getElementById('ci-p').value) || 0;
-        const r = (parseFloat(document.getElementById('ci-r').value) || 0) / 100;
-        const t = parseFloat(document.getElementById('ci-t').value) || 0;
-        const inf = (parseFloat(document.getElementById('ci-inf').value) || 0) / 100;
-
-        document.getElementById('lbl-ci-p').innerText = "₹" + p.toLocaleString('en-IN');
-
-        let normalMaturity = p * Math.pow((1 + r), t);
-        let realMaturity = p * Math.pow((1 + (r - inf)), t); // महंगाई एडजस्टेड वेल्थ
-        if(realMaturity < 0) realMaturity = 0;
-        let loss = normalMaturity - realMaturity;
-
-        document.getElementById('res-ci-normal').innerText = Math.round(normalMaturity).toLocaleString('en-IN');
-        document.getElementById('res-ci-loss').innerText = Math.round(loss).toLocaleString('en-IN');
-        document.getElementById('res-ci-real').innerText = Math.round(realMaturity).toLocaleString('en-IN');
-
-        updateSaaSChart('chartCI', ['वास्तविक क्रय शक्ति Value', 'महंगाई नुकसान'], [realMaturity, loss], ['#34d399', '#f87171']);
-    }
-
-    // 3. EMI PRE-PAYMENT SIMULATOR
-    function runEMILogic() {
-        const p = parseFloat(document.getElementById('emi-p').value) || 0;
-        const r = (parseFloat(document.getElementById('emi-r').value) || 0) / 12 / 100;
-        const t = parseFloat(document.getElementById('emi-t').value) || 0;
-        const extra = parseFloat(document.getElementById('emi-extra').value) || 0;
-
-        document.getElementById('lbl-emi-p').innerText = "₹" + p.toLocaleString('en-IN');
-
-        let totalMonths = t * 12;
-        let normalEmi = (p * r * Math.pow(1 + r, totalMonths)) / (Math.pow(1 + r, totalMonths) - 1);
-        if(isNaN(normalEmi)) normalEmi = 0;
-
-        // Simulation with extra part-payment per month
-        let balance = p;
-        let simulatedMonths = 0;
-        let totalInterestPaidWithExtra = 0;
-
-        while (balance > 0 && simulatedMonths < totalMonths) {
-            let interestComp = balance * r;
-            let principalComp = (normalEmi - interestComp) + extra;
-            totalInterestPaidWithExtra += interestComp;
-            balance -= principalComp;
-            simulatedMonths++;
+    // 4. LOAN COMPARISON MATRIX
+    function runComparisonMatrix() {
+        function emiMath(p, rate, years) {
+            let m = years * 12; let r = (rate / 12) / 100;
+            let emi = (p * r * Math.pow(1 + r, m)) / (Math.pow(1 + r, m) - 1);
+            let tot = emi * m;
+            return { emi: emi||0, interest: (tot - p)||0, total: tot||0 };
         }
+        let a = emiMath(parseFloat(document.getElementById('c-p1').value)||0, parseFloat(document.getElementById('c-r1').value)||0, parseFloat(document.getElementById('c-t1').value)||0);
+        let b = emiMath(parseFloat(document.getElementById('c-p2').value)||0, parseFloat(document.getElementById('c-r2').value)||0, parseFloat(document.getElementById('c-t2').value)||0);
 
-        let normalTotalInterest = (normalEmi * totalMonths) - p;
-        let interestSaved = normalTotalInterest - totalInterestPaidWithExtra;
-        let yearsSaved = ((totalMonths - simulatedMonths) / 12).toFixed(1);
-
-        document.getElementById('res-emi-val').innerText = Math.round(normalEmi).toLocaleString('en-IN');
-        document.getElementById('res-emi-saved-time').innerText = yearsSaved > 0 ? yearsSaved : 0;
-        document.getElementById('res-emi-saved-money').innerText = interestSaved > 0 ? Math.round(interestSaved).toLocaleString('en-IN') : 0;
-
-        updateSaaSChart('chartEMI', ['मूल लोन', 'संशोधित कुल ब्याज भार'], [p, totalInterestPaidWithExtra], ['#38bdf8', '#e11d48']);
+        document.getElementById('c-emi1').innerText = "₹" + Math.round(a.emi).toLocaleString('en-IN');
+        document.getElementById('c-emi2').innerText = "₹" + Math.round(b.emi).toLocaleString('en-IN');
+        document.getElementById('c-i1').innerText = "₹" + Math.round(a.interest).toLocaleString('en-IN');
+        document.getElementById('c-i2').innerText = "₹" + Math.round(b.interest).toLocaleString('en-IN');
+        document.getElementById('c-total1').innerText = "₹" + Math.round(a.total).toLocaleString('en-IN');
+        document.getElementById('c-total2').innerText = "₹" + Math.round(b.total).toLocaleString('en-IN');
     }
 
-    // Tab Event Hub
-    function refreshActiveTabCalculations() {
-        const activeId = document.querySelector('#saasTabs .nav-link.active').id;
-        if(activeId === 'tab-si') runSMLogic();
-        else if(activeId === 'tab-ci') runCILogic();
-        else if(activeId === 'tab-emi') runEMILogic();
+    // EXPORTS UTILITIES
+    function shareProWhatsApp() {
+        const textMessage = `*📊 एडवांस प्रो वित्तीय कैलकुलेटर रिपोर्ट* %0A` +
+                            `सटीक और प्रामाणिक वित्तीय गणना रिपोर्ट। विवरणों के लिए कृपया वेबसाइट पर विजिट करें।%0A%0A` +
+                            `👉 _E-Gyan Setu डिजिटल फिनटेक हब द्वारा जनरेटेड हिसाब।_`;
+        window.open(`https://wa.me/?text=${textMessage}`, '_blank');
     }
 
-    document.querySelectorAll('#saasTabs button').forEach(t => {
-        t.addEventListener('shown.bs.tab', refreshActiveTabCalculations);
+    function exportProPDF() {
+        const element = document.getElementById('captureWorkspace');
+        const opt = {
+            margin:       [10, 10],
+            filename:     'Premium_Financial_Report.pdf',
+            image:        { type: 'jpeg', quality: 1.0 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    // Tab Change Triggers to render respective charts perfectly
+    document.querySelectorAll('#premiumTabs button').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', (e) => {
+            if(e.target.id === 'si-t') calcSI();
+            else if(e.target.id === 'ci-t') calcCI();
+            else if(e.target.id === 'emi-t') calcPremiumEMI();
+            else if(e.target.id === 'comp-t') runComparisonMatrix();
+        });
     });
 
-    // One-Click Shareable Link Generator (WhatsApp Method)
-    function shareSaaSHub() {
-        const baseUrl = window.location.href.split('?')[0];
-        const p = document.getElementById('si-p').value;
-        const r = document.getElementById('si-r').value;
-        const shareUrl = `${baseUrl}?p=${p}&r=${r}&platform=saas_pro`;
-        
-        const msg = `*📊 FinTech SaaS Cloud Report*%0Aहिसाब का यूनीक लिंक: ${shareUrl}`;
-        window.open(`https://wa.me/?text=${msg}`, '_blank');
-    }
-
-    // Advanced PDF Export Layout Handler
-    function exportSaaSPDF() {
-        const worker = document.getElementById('pdfWorkspace');
-        const options = {
-            margin: [10, 10],
-            filename: 'SaaS_Professional_Financial_Matrix.pdf',
-            image: { type: 'jpeg', quality: 1.0 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        html2pdf().set(options).from(worker).save();
-    }
-
-    // URL Param Parser on Initial Load
     window.onload = () => {
-        const params = new URLSearchParams(window.location.search);
-        if(params.has('p')) document.getElementById('si-p').value = params.get('p');
-        if(params.has('r')) document.getElementById('si-r').value = params.get('r');
-        syncPro('si-p', 'slide-si-p');
-        runSMLogic();
+        calcSI();
+        renderHistory();
     };
 </script>
 
