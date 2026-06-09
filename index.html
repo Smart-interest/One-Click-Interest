@@ -341,3 +341,100 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>एडवांस डिजिटल ब्याज कैलकुलेटर</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 15px; }
+        .calc-wrapper { background: #ffffff; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 500px; padding: 25px; }
+        .calc-header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+        .result-card { background: #f8f9fa; border-radius: 16px; border: 1px solid #e9ecef; display: none; margin-top: 20px; padding: 20px; }
+        .goal-box { background: #e8f5e9; border-left: 5px solid #2e7d32; padding: 15px; border-radius: 8px; margin-top: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="calc-wrapper">
+    <div class="calc-header">
+        <h2><i class="fa-solid fa-calculator"></i> प्रीमियम कैलकुलेटर</h2>
+    </div>
+
+    <div class="mb-3">
+        <label>मूलधन (₹)</label>
+        <input type="number" id="principal" class="form-control" placeholder="रकम दर्ज करें">
+    </div>
+
+    <div class="row">
+        <div class="col-6 mb-3">
+            <label>ब्याज दर (%)</label>
+            <input type="number" id="rate" class="form-control" placeholder="दर">
+        </div>
+        <div class="col-6 mb-3">
+            <label>ब्याज का प्रकार</label>
+            <select id="rateType" class="form-select">
+                <option value="simple">साधारण ब्याज</option>
+                <option value="compound">चक्रवृद्धि ब्याज</option>
+                <option value="monthly">मासिक (गाँव)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 mb-3"><label>शुरुआत तारीख</label><input type="date" id="startDate" class="form-control"></div>
+        <div class="col-6 mb-3"><label>अंत तारीख</label><input type="date" id="endDate" class="form-control"></div>
+    </div>
+
+    <button class="btn btn-primary w-100 p-2" onclick="calculate()">हिसाब कैलकुलेट करें</button>
+
+    <div class="result-card" id="resultCard">
+        <h6>कुल ब्याज: ₹<span id="lblInterest">0</span></h6>
+        <h6>कुल राशि: ₹<span id="lblTotal">0</span></h6>
+        <div id="goalBox" class="goal-box">
+            <p class="mb-1">🚀 पैसा 2 गुना होगा: <span id="doubleTime" class="fw-bold"></span></p>
+            <p class="mb-0">🚀 पैसा 3 गुना होगा: <span id="tripleTime" class="fw-bold"></span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('endDate').valueAsDate = new Date();
+
+    function calculate() {
+        const p = parseFloat(document.getElementById('principal').value);
+        const r = parseFloat(document.getElementById('rate').value);
+        const type = document.getElementById('rateType').value;
+        const start = new Date(document.getElementById('startDate').value);
+        const end = new Date(document.getElementById('endDate').value);
+        
+        if(!p || !r) return alert("जानकारी भरें");
+
+        const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+        const years = diffDays / 365;
+        let interest = 0;
+
+        if(type === 'simple') {
+            interest = (p * r * years);
+        } else if(type === 'compound') {
+            interest = (p * Math.pow((1 + r/100), years)) - p;
+        } else {
+            interest = (p * r * (diffDays/30)) / 100;
+        }
+
+        document.getElementById('lblInterest').innerText = interest.toFixed(2);
+        document.getElementById('lblTotal').innerText = (p + interest).toFixed(2);
+        
+        // Rule of 72
+        document.getElementById('doubleTime').innerText = Math.round(72 / r) + " साल";
+        document.getElementById('tripleTime').innerText = Math.round(114 / r) + " साल";
+        
+        document.getElementById('resultCard').style.display = "block";
+        document.getElementById('goalBox').style.display = "block";
+    }
+</script>
+</body>
+</html>
